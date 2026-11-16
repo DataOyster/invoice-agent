@@ -22,6 +22,15 @@ AnomalyType = Literal[
     "unit_confusion",
 ]
 EvidenceKind = Literal["price_list", "clause", "delivery_note", "vat_rule", "invoice"]
+Layout = Literal["A", "B", "C", "D"]  # D appears only in the hard split (unseen by the rules)
+Split = Literal["standard", "hard"]
+# What makes a hard-split document hard. Rules were written for the standard split only.
+Difficulty = Literal[
+    "unseen_layout",  # different labels and row format
+    "description_variants",  # product names abbreviated, misspelled, with pack sizes
+    "heavy_noise",  # stronger rotation, text lines break apart
+    "image_only_readable",  # a clean scan with no text layer: needs vision, not pdfplumber
+]
 
 ANOMALY_TYPES: tuple[AnomalyType, ...] = (
     "price_above_agreement",
@@ -47,7 +56,7 @@ class Supplier(Strict):
     category: str
     role: Literal["supplier", "competitor"] = "supplier"
     language: Language
-    layout: Literal["A", "B", "C"]
+    layout: Layout
     org_number: str
     iban: str
     address: str
@@ -134,8 +143,10 @@ class InvoiceGroundTruth(Strict):
 
     invoice_id: str
     file: str
+    split: Split = "standard"
+    difficulty: list[Difficulty] = Field(default_factory=list)
     language: Language
-    layout: Literal["A", "B", "C"]
+    layout: Layout
     document_type: Literal["invoice", "credit_note"]
     supplier_id: str
     number: str
@@ -171,6 +182,8 @@ class InvoiceGroundTruth(Strict):
             raise ValueError("credit notes, and only credit notes, reference an invoice")
         if self.readable != (self.unreadable_reason is None):
             raise ValueError("unreadable_reason is required exactly when readable is false")
+        if (self.split == "hard") != bool(self.difficulty):
+            raise ValueError("hard-split documents, and only those, list their difficulty")
         if self.delivery_date > self.invoice_date:
             raise ValueError("delivery_date after invoice_date")
         return self

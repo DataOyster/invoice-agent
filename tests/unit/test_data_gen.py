@@ -68,8 +68,19 @@ def written(tmp_path_factory, dataset):
 
 
 @pytest.fixture(scope="module")
-def invoices(dataset):
+def all_invoices(dataset):
     return dataset.invoices
+
+
+@pytest.fixture(scope="module")
+def invoices(dataset):
+    """The standard split: quotas and coverage below are about this split."""
+    return [inv for inv in dataset.invoices if inv.split == "standard"]
+
+
+@pytest.fixture(scope="module")
+def hard(dataset):
+    return [inv for inv in dataset.invoices if inv.split == "hard"]
 
 
 # ---------------------------------------------------------------- determinism
@@ -91,7 +102,7 @@ def test_different_seed_gives_different_ground_truth(tmp_path, written):
 
 def test_every_ground_truth_line_validates_against_schema(written):
     lines = (written / "ground_truth.jsonl").read_text(encoding="utf-8").splitlines()
-    assert len(lines) == 100
+    assert len(lines) == 130  # 100 standard + 30 hard
     for line in lines:
         InvoiceGroundTruth.model_validate_json(line)
 
@@ -125,10 +136,10 @@ def test_error_share_is_within_configured_range(invoices):
 
 def test_quotas_hold_for_other_seeds():
     for seed in (1, 2, 3):
-        counts = Counter(
-            a.type for inv in generate(GeneratorConfig(seed=seed)).invoices for a in inv.anomalies
-        )
-        assert counts == {t: 5 for t in ANOMALY_TYPES}
+        docs = generate(GeneratorConfig(seed=seed)).invoices
+        for split, quota in (("standard", 5), ("hard", 2)):
+            counts = Counter(a.type for inv in docs if inv.split == split for a in inv.anomalies)
+            assert counts == {t: quota for t in ANOMALY_TYPES}, (seed, split)
 
 
 def test_all_languages_and_layouts_appear(invoices):
@@ -208,12 +219,12 @@ def test_wrong_vat_anomalies_differ_from_vat_table(invoices):
     assert len(variants) == 3  # invoice-date rule, old food rate, alcohol at reduced rate
 
 
-def test_clean_lines_match_price_list_vat_table_and_delivery_note(dataset, invoices):
+def test_clean_lines_match_price_list_vat_table_and_delivery_note(dataset, all_invoices):
     """Everything not labelled as an anomaly or price trap must be consistent with the reference
     data; otherwise the evaluation would count correct flags as false positives."""
     products = {p.product_id: p for p in dataset.products}
     notes = {n.note_id: n for n in dataset.delivery_notes}
-    for inv in invoices:
+    for inv in all_invoices:
         anomaly = inv.anomalies[0] if inv.anomalies else None
         if inv.is_trap and "tolerance" in inv.trap_reason:
             continue
@@ -231,10 +242,10 @@ def test_clean_lines_match_price_list_vat_table_and_delivery_note(dataset, invoi
 # ---------------------------------------------------------------- duplicates
 
 
-def test_duplicates_point_to_an_earlier_original(invoices):
-    by_id = {inv.invoice_id: inv for inv in invoices}
+def test_duplicates_point_to_an_earlier_original(all_invoices):
+    by_id = {inv.invoice_id: inv for inv in all_invoices}
     kinds = set()
-    for dup, a in _anomalies(invoices, "duplicate"):
+    for dup, a in _anomalies(all_invoices, "duplicate"):
         original = by_id[a.evidence.ref]
         assert original.invoice_id < dup.invoice_id
         assert original.supplier_id == dup.supplier_id and not original.anomalies
@@ -248,10 +259,10 @@ def test_duplicates_point_to_an_earlier_original(invoices):
     assert kinds == {"number", "date_total"}
 
 
-def test_no_accidental_duplicates_among_non_duplicates(invoices):
+def test_no_accidental_duplicates_among_non_duplicates(all_invoices):
     docs = [
         inv
-        for inv in invoices
+        for inv in all_invoices
         if inv.document_type == "invoice" and not any(a.type == "duplicate" for a in inv.anomalies)
     ]
     numbers = Counter((inv.supplier_id, inv.number) for inv in docs)
@@ -263,15 +274,15 @@ def test_no_accidental_duplicates_among_non_duplicates(invoices):
 # ---------------------------------------------------------------- references and identifiers
 
 
-def test_every_evidence_and_clause_reference_exists(dataset, invoices):
+def test_every_evidence_and_clause_reference_exists(dataset, all_invoices):
     ids = {
         "price_list": {e.entry_id for e in dataset.price_list},
         "delivery_note": {n.note_id for n in dataset.delivery_notes},
         "vat_rule": {r.rule_id for r in dataset.vat_table},
-        "invoice": {inv.invoice_id for inv in invoices},
+        "invoice": {inv.invoice_id for inv in all_invoices},
     }
     clause_ids = {c.clause_id for clauses in dataset.contracts.values() for c in clauses}
-    for inv in invoices:
+    for inv in all_invoices:
         for a in inv.anomalies:
             assert a.evidence.ref in ids[a.evidence.kind]
             if a.type == "wrong_vat":
@@ -281,8 +292,8 @@ def test_every_evidence_and_clause_reference_exists(dataset, invoices):
                 assert a.clause_ref.startswith(inv.supplier_id)
 
 
-def test_delivery_dates_follow_contract_weekdays(invoices):
-    for inv in invoices:
+def test_delivery_dates_follow_contract_weekdays(all_invoices):
+    for inv in all_invoices:
         assert inv.delivery_date.weekday() in catalog.DELIVERY_WEEKDAYS[inv.supplier_id]
 
 
@@ -360,3 +371,51 @@ def _anomalies(invoices, anomaly_type):
 def _price_deviation(dataset, inv, line) -> float:
     agreed = find_price(dataset.price_list, line.product_id, inv.delivery_date).unit_price
     return round(line.unit_price / agreed - 1, 6)
+
+
+# ---------------------------------------------------------------- hard split
+
+
+def test_hard_split_has_its_quotas_and_every_difficulty(hard):
+    assert len(hard) == 30
+    assert Counter(a.type for inv in hard for a in inv.anomalies) == {t: 2 for t in ANOMALY_TYPES}
+    assert sum(inv.is_trap for inv in hard) >= 3
+    difficulties = Counter(d for inv in hard for d in inv.difficulty)
+    assert set(difficulties) == {
+        "unseen_layout",
+        "description_variants",
+        "heavy_noise",
+        "image_only_readable",
+    }
+    assert all(inv.invoice_id.startswith("INV-H") for inv in hard)
+
+
+def test_layout_d_appears_only_in_the_hard_split(invoices, hard):
+    assert "D" not in {inv.layout for inv in invoices}
+    assert all((inv.layout == "D") == ("unseen_layout" in inv.difficulty) for inv in hard)
+
+
+def test_description_variants_never_match_a_catalog_name(hard):
+    exact = {name.casefold() for p in catalog.PRODUCTS for name in p.names.values()}
+    varied = [inv for inv in hard if "description_variants" in inv.difficulty]
+    assert varied
+    for inv in varied:
+        for line in inv.lines:
+            assert line.description.casefold() not in exact, line.description
+
+
+def test_hard_invoice_numbers_do_not_reuse_standard_numbers(invoices, hard):
+    standard_numbers = {(i.supplier_id, i.number) for i in invoices}
+    for inv in hard:
+        if not any(a.type == "duplicate" for a in inv.anomalies):
+            assert (inv.supplier_id, inv.number) not in standard_numbers
+
+
+def test_hard_pdfs_have_text_except_the_scans(written, hard):
+    for inv in hard:
+        with pdfplumber.open(written / inv.file) as pdf:
+            text = pdf.pages[0].extract_text() or ""
+        if "image_only_readable" in inv.difficulty:
+            assert text.strip() == "", inv.invoice_id
+        elif "heavy_noise" not in inv.difficulty:  # rotated text may break the number apart
+            assert inv.number in text, inv.invoice_id

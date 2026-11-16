@@ -14,6 +14,7 @@ turns them into validated Pydantic records.
 from __future__ import annotations
 
 import random
+import unicodedata
 from dataclasses import dataclass, field
 from datetime import date, timedelta
 from decimal import ROUND_HALF_UP, Decimal
@@ -52,6 +53,44 @@ class GeneratorConfig:
     noise_share: float = 0.10
     first_delivery: date = date(2026, 1, 7)
     last_delivery: date = date(2026, 11, 6)
+    # Hard split: documents the rules were not written for (see DATASET_PLAN, "Hard split").
+    n_hard_documents: int = 30
+    hard_per_anomaly_type: int = 2
+
+    @property
+    def standard_quota(self) -> SplitQuota:
+        return SplitQuota(
+            self.n_documents,
+            self.per_anomaly_type,
+            self.n_vat_traps,
+            self.n_price_traps,
+            self.n_credit_notes,
+            self.n_unreadable,
+            self.noise_share,
+        )
+
+    @property
+    def hard_quota(self) -> SplitQuota:
+        return SplitQuota(
+            self.n_hard_documents,
+            self.hard_per_anomaly_type,
+            n_vat_traps=2,
+            n_price_traps=1,
+            n_credit_notes=1,
+            n_unreadable=0,
+            noise_share=0.0,
+        )
+
+
+@dataclass(frozen=True)
+class SplitQuota:
+    n_documents: int
+    per_anomaly_type: int
+    n_vat_traps: int
+    n_price_traps: int
+    n_credit_notes: int
+    n_unreadable: int
+    noise_share: float
 
     @property
     def n_regular(self) -> int:
@@ -189,6 +228,7 @@ class _Line:
     qty: float
     unit_price: float
     vat_rate: float
+    description: str | None = None  # printed text if it differs from the catalog name
 
 
 @dataclass
@@ -210,7 +250,9 @@ class _Draft:
     scan_noise: bool = False
     invoice_id: str = ""
     note_id: str | None = None
-    extra: dict = field(default_factory=dict)
+    split: str = "standard"
+    difficulty: list[str] = field(default_factory=list)
+    layout: str | None = None  # None = the supplier's usual layout
 
     def total_excl_vat(self) -> float:
         return money(sum(Decimal(str(line_total(line))) for line in self.lines))
@@ -440,10 +482,43 @@ def generate(config: GeneratorConfig | None = None) -> Dataset:
     competitor_prices = build_competitor_prices(rng)
     contracts = build_contracts(rng)
     b = _Builder(rng, price_list, config.first_delivery, config.last_delivery)
+    standard = _build_split(b, config.standard_quota, counters={}, credit_offset=0)
 
-    n = config.per_anomaly_type
-    n_clean = config.n_regular - 4 * n - config.n_vat_traps - config.n_price_traps
-    needed_originals = n + config.n_credit_notes
+    # The hard split has its own random stream, so adding it never changes the standard split.
+    hard_rng = random.Random(f"hard-split-{config.seed}")
+    b_hard = _Builder(hard_rng, price_list, config.first_delivery, config.last_delivery)
+    b_hard.counter = b.counter
+    counters = _next_sequence(standard)  # hard invoices continue each supplier's numbering
+    hard = _build_split(b_hard, config.hard_quota, counters, credit_offset=config.n_credit_notes)
+    for d in hard:
+        d.split = "hard"
+
+    delivery_notes: list[DeliveryNote] = []
+    _assign_ids(standard, lambda i: f"INV-{i:04d}", delivery_notes)
+    _assign_ids(hard, lambda i: f"INV-H{i:03d}", delivery_notes)
+    _assign_difficulties(hard_rng, hard)
+
+    invoices = [_to_ground_truth(d, contracts) for d in standard + hard]
+    return Dataset(
+        config=config,
+        suppliers=list(catalog.SUPPLIERS),
+        products=list(catalog.PRODUCTS),
+        price_list=price_list,
+        competitor_prices=competitor_prices,
+        vat_table=list(VAT_TABLE),
+        contracts=contracts,
+        delivery_notes=delivery_notes,
+        invoices=invoices,
+    )
+
+
+def _build_split(
+    b: _Builder, quota: SplitQuota, counters: dict[str, int], credit_offset: int
+) -> list[_Draft]:
+    """All documents of one split: anomalies, traps, clean invoices, duplicates, credit notes."""
+    n = quota.per_anomaly_type
+    n_clean = quota.n_regular - 4 * n - quota.n_vat_traps - quota.n_price_traps
+    needed_originals = n + quota.n_credit_notes
     if n_clean < needed_originals:
         raise ValueError("config leaves too few clean invoices for duplicates and credit notes")
 
@@ -466,13 +541,13 @@ def generate(config: GeneratorConfig | None = None) -> Dataset:
     for k in range(n):
         drafts.append(inject_vat(b, k))
     # 2. Trap cases that must NOT be flagged.
-    for _ in range(config.n_vat_traps):
+    for _ in range(quota.n_vat_traps):
         d = b.any_supplier_draft(
             _is_food_supplier, _is_food, *LATE_MARCH, invoice_window=EARLY_APRIL
         )
         d.trap_reason = "delivered before 2026-04-01 and invoiced after it; 12% on food is correct"
         drafts.append(d)
-    for _ in range(config.n_price_traps):
+    for _ in range(quota.n_price_traps):
         d = b.any_supplier_draft()
         make_price_trap(b, d)
         drafts.append(d)
@@ -480,28 +555,33 @@ def generate(config: GeneratorConfig | None = None) -> Dataset:
     clean = [b.any_supplier_draft() for _ in range(n_clean)]
     drafts.extend(clean)
     # 4. Unreadable PDFs (clean content, but image-only or corrupted).
-    for k in range(config.n_unreadable):
+    for k in range(quota.n_unreadable):
         d = b.any_supplier_draft()
         d.render_mode = "blurred_image_only" if k % 2 == 0 else "truncated_file"
         drafts.append(d)
 
     _avoid_accidental_duplicates(drafts)
     _mark_natural_vat_traps(clean)
-    _assign_numbers(drafts)
+    _assign_numbers(drafts, counters)
 
-    originals = rng.sample([d for d in clean if d.trap_reason is None], needed_originals)
-    credit_originals = originals[: config.n_credit_notes]
-    duplicate_originals = originals[config.n_credit_notes :]
+    originals = b.rng.sample([d for d in clean if d.trap_reason is None], needed_originals)
+    credit_originals = originals[: quota.n_credit_notes]
+    duplicate_originals = originals[quota.n_credit_notes :]
     for k, original in enumerate(credit_originals):
-        drafts.append(_credit_note(b, original, k))
+        drafts.append(_credit_note(b, original, k + credit_offset))
     next_seq = _next_sequence(drafts)
     for k, original in enumerate(duplicate_originals):
         drafts.append(_duplicate(b, original, k, next_seq))
 
     readable = [d for d in drafts if d.render_mode == "normal" and d.duplicate_of is None]
-    for d in rng.sample(readable, round(config.noise_share * len(readable))):
+    for d in b.rng.sample(readable, round(quota.noise_share * len(readable))):
         d.scan_noise = True
 
+    return drafts
+
+
+def _assign_ids(drafts: list[_Draft], make_id, delivery_notes: list[DeliveryNote]) -> None:
+    """Sort into archive order, give invoice ids, create the delivery notes."""
     drafts.sort(
         key=lambda d: (
             d.invoice_date,
@@ -511,9 +591,8 @@ def generate(config: GeneratorConfig | None = None) -> Dataset:
             d.order,
         )
     )
-    delivery_notes = []
     for i, d in enumerate(drafts, start=1):
-        d.invoice_id = f"INV-{i:04d}"
+        d.invoice_id = make_id(i)
         if d.has_own_delivery_note:
             d.note_id = f"DN-{len(delivery_notes) + 1:04d}"
             delivery_notes.append(_delivery_note(d))
@@ -521,18 +600,61 @@ def generate(config: GeneratorConfig | None = None) -> Dataset:
         if d.duplicate_of is not None:
             d.note_id = d.duplicate_of.note_id
 
-    invoices = [_to_ground_truth(d, contracts) for d in drafts]
-    return Dataset(
-        config=config,
-        suppliers=list(catalog.SUPPLIERS),
-        products=list(catalog.PRODUCTS),
-        price_list=price_list,
-        competitor_prices=competitor_prices,
-        vat_table=list(VAT_TABLE),
-        contracts=contracts,
-        delivery_notes=delivery_notes,
-        invoices=invoices,
-    )
+
+# One entry per hard document (cycled if the split is larger). Two documents combine two
+# difficulties; the others have one each, so the effect of each difficulty can be read apart.
+HARD_DIFFICULTY_PLAN: tuple[tuple[str, ...], ...] = (
+    *[("unseen_layout",)] * 9,
+    *[("description_variants",)] * 9,
+    *[("heavy_noise",)] * 8,
+    *[("image_only_readable",)] * 2,
+    *[("unseen_layout", "description_variants")] * 2,
+)
+
+PACK_WORD = {"sv": "kartong", "en": "case", "it": "cartone"}
+EXACT_NAMES = {name.casefold() for p in catalog.PRODUCTS for name in p.names.values()}
+
+
+def _assign_difficulties(rng: random.Random, drafts: list[_Draft]) -> None:
+    plan = [HARD_DIFFICULTY_PLAN[i % len(HARD_DIFFICULTY_PLAN)] for i in range(len(drafts))]
+    rng.shuffle(plan)
+    for d, difficulty in zip(drafts, plan, strict=True):
+        d.difficulty = list(difficulty)
+        if "unseen_layout" in difficulty:
+            d.layout = "D"
+        if "description_variants" in difficulty:
+            for line in d.lines:
+                line.description = description_variant(rng, line.product, d.supplier.language)
+
+
+def _strip_accents(text: str) -> str:
+    return "".join(c for c in unicodedata.normalize("NFKD", text) if not unicodedata.combining(c))
+
+
+def description_variant(rng: random.Random, product: Product, language: str) -> str:
+    """How a supplier's own system might print the product: never the exact catalog name."""
+    name = product.names[language]
+    for _ in range(10):
+        kind = rng.choice(("pack", "abbreviation", "typo"))
+        if kind == "pack":
+            pack = PACK_WORD[language]
+            text = (
+                f"{name} {product.pack_weight_kg:g}kg-{pack}"
+                if product.pack_weight_kg
+                else f"{name} ({pack})"
+            )
+        elif kind == "abbreviation":
+            text = " ".join(w[:4] + "." if len(w) > 5 else w for w in name.split())
+        else:
+            longest = max(name.split(), key=len)
+            i = len(longest) // 2
+            swapped = longest[: i - 1] + longest[i] + longest[i - 1] + longest[i + 1 :]
+            text = name.replace(longest, swapped, 1)
+        if rng.random() < 0.3:
+            text = _strip_accents(text).upper()
+        if text.casefold() not in EXACT_NAMES:
+            return text
+    return f"{name} [{product.product_id[-2:]}]"
 
 
 def _mark_natural_vat_traps(clean: list[_Draft]) -> None:
@@ -564,8 +686,7 @@ def _sequence_start(supplier: Supplier) -> int:
     return 100 + 37 * int(supplier.supplier_id[1:])
 
 
-def _assign_numbers(drafts: list[_Draft]) -> None:
-    counters: dict[str, int] = {}
+def _assign_numbers(drafts: list[_Draft], counters: dict[str, int]) -> None:
     for d in sorted(drafts, key=lambda x: (x.invoice_date, x.order)):
         sid = d.supplier.supplier_id
         counters[sid] = counters.get(sid, _sequence_start(d.supplier)) + 1
@@ -617,7 +738,9 @@ def _duplicate(b: _Builder, original: _Draft, k: int, next_seq: dict[str, int]) 
         supplier=original.supplier,
         delivery_date=original.delivery_date,
         invoice_date=invoice_date,
-        lines=[_Line(x.product, x.qty, x.unit_price, x.vat_rate) for x in original.lines],
+        lines=[
+            _Line(x.product, x.qty, x.unit_price, x.vat_rate, x.description) for x in original.lines
+        ],
         delivered=dict(original.delivered),
         order=b.counter,
         number=number,
@@ -654,7 +777,7 @@ def _to_ground_truth(d: _Draft, contracts: dict[str, list[Clause]]) -> InvoiceGr
     lines = [
         InvoiceLine(
             product_id=line.product.product_id,
-            description=line.product.names[d.supplier.language],
+            description=line.description or line.product.names[d.supplier.language],
             qty=line.qty,
             unit=line.product.unit,
             unit_price=line.unit_price,
@@ -678,8 +801,10 @@ def _to_ground_truth(d: _Draft, contracts: dict[str, list[Clause]]) -> InvoiceGr
     return InvoiceGroundTruth(
         invoice_id=d.invoice_id,
         file=f"invoices/{d.invoice_id}.pdf",
+        split=d.split,
+        difficulty=d.difficulty,
         language=d.supplier.language,
-        layout=d.supplier.layout,
+        layout=d.layout or d.supplier.layout,
         document_type=d.document_type,
         supplier_id=d.supplier.supplier_id,
         number=d.number,

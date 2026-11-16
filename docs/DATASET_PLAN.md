@@ -74,3 +74,18 @@ An anomaly entry has: `type` (one of `price_above_agreement`, `duplicate`, `wron
 11. **Fake identifiers:** IBANs as `SE00 ...` (check digits 00 are never valid), organisation numbers as `000000-xxxx` (impossible).
 12. **Competitor price list:** small, 5 shared products, only to feed optional task 13.
 13. **Exact quotas instead of probabilities:** with 100 invoices, 5 per anomaly type (25%), so every type appears for any seed.
+
+## Hard split (agreed 2026-11-16, after the baseline scored 100% on the standard split)
+The standard split is consistent but too easy: rules written for it read and check it perfectly,
+so it cannot show whether a model adds anything. The hard split (30 documents, `INV-H001`...)
+uses the same suppliers, price lists, contracts and VAT table, and its own random stream, so the
+standard split stays byte-identical.
+
+- **Quotas:** 2 anomalies per type (10 of 30), 2 VAT traps, 1 price trap, 1 credit note.
+- **Difficulties** (recorded per document in `difficulty`):
+  - `unseen_layout`: layout D, other label wording and another row format (11 documents);
+  - `description_variants`: product names abbreviated, misspelled, upper-case or with a pack size,
+    never equal to a catalog name (11 documents);
+  - `heavy_noise`: rotation of 3-4 degrees, text lines break apart (8 documents);
+  - `image_only_readable`: a clean 150 dpi scan with no text layer (2 documents).
+- **Rule:** the rule extractor and the rule checks are not changed to fit the hard split.

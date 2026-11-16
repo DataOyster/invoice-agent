@@ -71,13 +71,20 @@ def write_dataset(ds: Dataset, out_dir: Path) -> None:
     pdf_dir = out_dir / "invoices"
     pdf_dir.mkdir(parents=True, exist_ok=True)
     for inv in ds.invoices:
-        angle = rng.choice((-1.2, -0.8, -0.5, 0.5, 0.8, 1.2)) if inv.scan_noise else 0.0
+        angle = 0.0
+        if inv.scan_noise:
+            angle = rng.choice((-1.2, -0.8, -0.5, 0.5, 0.8, 1.2))
+        elif "heavy_noise" in inv.difficulty:
+            angle = rng.choice((-4.0, -3.5, -3.0, 3.0, 3.5, 4.0))
         mode = inv.unreadable_reason or "normal"
+        if "image_only_readable" in inv.difficulty:
+            mode = "image_only_readable"
         (out_dir / inv.file).write_bytes(render_pdf(inv, suppliers[inv.supplier_id], angle, mode))
 
     summary = {
         "seed": ds.config.seed,
         "documents": len(ds.invoices),
+        "hard_split_documents": sum(1 for i in ds.invoices if i.split == "hard"),
         "with_anomaly": sum(1 for i in ds.invoices if i.anomalies),
         "traps": sum(1 for i in ds.invoices if i.is_trap),
         "unreadable": sum(1 for i in ds.invoices if not i.readable),

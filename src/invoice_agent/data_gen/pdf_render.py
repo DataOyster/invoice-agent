@@ -15,6 +15,7 @@ from __future__ import annotations
 import io
 from datetime import date
 
+import pypdfium2 as pdfium
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.utils import ImageReader
@@ -86,6 +87,44 @@ LABELS = {
         "incl": "Totale da pagare",
         "credits": "Rif. fattura",
         "note": "DDT",
+    },
+}
+
+# Layout D (hard split only): other wording and another row format, so the rules written for
+# layouts A-C do not recognise it. Titles stay the same.
+LABELS_D = {
+    "sv": {
+        "number": "Faktura nr",
+        "invoice_date": "Datum",
+        "delivery_date": "Levererat",
+        "note": "Följesedel nr",
+        "credits": "Kreditering av",
+        "excl": "Netto",
+        "vat_total": "Moms totalt",
+        "incl": "Totalt att betala",
+        "vat": "moms",
+    },
+    "en": {
+        "number": "Bill no.",
+        "invoice_date": "Issued",
+        "delivery_date": "Goods delivered on",
+        "note": "Delivery ref.",
+        "credits": "Credit for bill",
+        "excl": "Net amount",
+        "vat_total": "Tax",
+        "incl": "Amount due",
+        "vat": "VAT",
+    },
+    "it": {
+        "number": "Fattura n.",
+        "invoice_date": "Emessa il",
+        "delivery_date": "Consegnata il",
+        "note": "Documento di trasporto",
+        "credits": "Storno fattura",
+        "excl": "Imponibile",
+        "vat_total": "Imposta",
+        "incl": "Totale dovuto",
+        "vat": "IVA",
     },
 }
 
@@ -238,10 +277,58 @@ def _draw_page(c: canvas.Canvas, layout: str, t: dict) -> None:
         _draw_lines(c, 40, y, total_lines, 10)
 
 
+def _draw_layout_d(c: canvas.Canvas, inv: InvoiceGroundTruth, supplier: Supplier) -> None:
+    """Rows read 'qty unit x description at price | VAT rate | amount'; labels use other words."""
+    lang = inv.language
+    lab = LABELS_D[lang]
+    c.setFont("Helvetica-Bold", 16)
+    c.drawCentredString(A4[0] / 2, 800, LABELS[lang][inv.document_type])
+    c.setFont("Helvetica", 9)
+    c.drawCentredString(A4[0] / 2, 784, f"{supplier.name} - {supplier.address}")
+    c.drawCentredString(A4[0] / 2, 772, f"{supplier.org_number} / {supplier.iban}")
+    meta = [
+        f"{lab['number']} {inv.number}",
+        f"{lab['invoice_date']} {format_date(inv.invoice_date, lang)}",
+        f"{lab['delivery_date']} {format_date(inv.delivery_date, lang)}",
+    ]
+    if inv.delivery_note_id:
+        meta.append(f"{lab['note']} {inv.delivery_note_id}")
+    if inv.credits_invoice_number:
+        meta.append(f"{lab['credits']} {inv.credits_invoice_number}")
+    _draw_lines(c, 50, 740, meta)
+    _draw_lines(c, 380, 740, [catalog.BUYER["name"], catalog.BUYER["address"]])
+    y = 660
+    for line in inv.lines:
+        unit = UNIT_LABELS[lang][line.unit]
+        c.drawString(
+            50,
+            y,
+            f"{format_qty(line.qty, lang)} {unit} x {line.description} "
+            f"@ {format_number(line.unit_price, lang)} | {lab['vat']} {format_rate(line.vat_rate)}",
+        )
+        c.drawRightString(550, y, format_number(line.line_total, lang))
+        y -= 16
+    totals = [
+        (lab["excl"], format_number(inv.total_excl_vat, lang)),
+        (lab["vat_total"], format_number(inv.vat_total, lang)),
+        (lab["incl"], "SEK " + format_number(inv.total_incl_vat, lang)),
+    ]
+    for label, value in totals:
+        y -= 14
+        c.drawString(330, y, label)
+        c.drawRightString(550, y, value)
+
+
 def render_pdf(
     inv: InvoiceGroundTruth, supplier: Supplier, noise_angle: float = 0.0, mode: str = "normal"
 ) -> bytes:
-    """Return the PDF bytes for one invoice. `mode`: normal, blurred_image_only, truncated_file."""
+    """Return the PDF bytes for one invoice.
+
+    `mode`: normal, blurred_image_only, truncated_file, or image_only_readable (a clean scan:
+    the normal page rasterised, so it has no text layer but is easy to read by eye).
+    """
+    if mode == "image_only_readable":
+        return _scanned(render_pdf(inv, supplier, noise_angle, "normal"), inv)
     t = _text_rows(inv, supplier)
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=A4, invariant=1)
@@ -254,13 +341,30 @@ def render_pdf(
             c.translate(A4[0] / 2, A4[1] / 2)
             c.rotate(noise_angle)
             c.translate(-A4[0] / 2 + 6, -A4[1] / 2 - 4)
-        _draw_page(c, inv.layout, t)
+        if inv.layout == "D":
+            _draw_layout_d(c, inv, supplier)
+        else:
+            _draw_page(c, inv.layout, t)
     c.showPage()
     c.save()
     data = buffer.getvalue()
     if mode == "truncated_file":
         return data[: len(data) * 3 // 5]
     return data
+
+
+def _scanned(pdf_bytes: bytes, inv: InvoiceGroundTruth) -> bytes:
+    """Rasterise a PDF page at 150 dpi in greyscale and wrap the image in a new PDF."""
+    document = pdfium.PdfDocument(pdf_bytes)
+    image = document[0].render(scale=150 / 72, grayscale=True).to_pil()
+    document.close()
+    buffer = io.BytesIO()
+    c = canvas.Canvas(buffer, pagesize=A4, invariant=1)
+    c.setTitle(f"scan {inv.number}")
+    c.drawImage(ImageReader(image), 0, 0, width=A4[0], height=A4[1])
+    c.showPage()
+    c.save()
+    return buffer.getvalue()
 
 
 def _blurred_image(t: dict) -> Image.Image:
