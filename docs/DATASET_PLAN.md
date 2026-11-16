@@ -59,3 +59,18 @@ An anomaly entry has: `type` (one of `price_above_agreement`, `duplicate`, `wron
 - Ground truth validates against its Pydantic schema.
 - Every anomaly type appears; the VAT trap case appears; error share is within the configured range.
 - No generated name matches a denylist of real company names kept in the test file (a short list is enough).
+
+## Decisions (agreed 2026-11-16, override the text above where they differ)
+1. **Scan noise:** reportlab cannot blur. Noise = slight rotation and offset drawn with reportlab. In addition, 4 image-only or corrupted PDFs that have no text layer; they are not anomalies, they must be routed to manual review (guardrail test material).
+2. **One label per line:** a unit confusion also looks like a price above agreement. Ground truth labels it only `unit_confusion`; checks run the unit check before the price check.
+3. **Duplicate rule:** same supplier and same number, or same supplier, same invoice date and same total. The later document is the duplicate; the original stays clean.
+4. **Price magnitudes:** slight anomalies +3% to +6%, clear ones +15% to +40%; within-tolerance traps at most ±0.5% (tolerance is 1%).
+5. **Price change during the year:** 2 suppliers get a new price list from 2026-07-01, so "price valid on the delivery date" is actually tested.
+6. **Evidence:** `evidence` is `{kind, ref}` with kind in `price_list`, `clause`, `delivery_note`, `vat_rule`, `invoice`.
+7. **Credit notes:** `document_type` is `invoice` or `credit_note`; credit notes have negative quantities, reference the original invoice and are excluded from the duplicate check. 2 credit notes.
+8. **Drinks supplier:** sells only wine, strong beer and spirits (25%), so no unverified rule on non-alcoholic drinks is needed. Non-food supplies (cleaning, napkins) sit with the dry-goods supplier at 25%.
+9. **At most one injected anomaly per invoice.** Simplifies ground truth; stated as a limitation in the eval report (real invoices can have several).
+10. **Contracts in English only.** Retrieval (task 6) queries with canonical product names or IDs, not invoice-language descriptions.
+11. **Fake identifiers:** IBANs as `SE00 ...` (check digits 00 are never valid), organisation numbers as `000000-xxxx` (impossible).
+12. **Competitor price list:** small, 5 shared products, only to feed optional task 13.
+13. **Exact quotas instead of probabilities:** with 100 invoices, 5 per anomaly type (25%), so every type appears for any seed.

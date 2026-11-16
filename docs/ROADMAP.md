@@ -7,7 +7,7 @@ Cut order if time runs out: task 11, then task 13. **Never cut tasks 8 and 10.**
 
 ## Monday 16 Nov: foundations and first parts (tasks 2-5)
 - [x] **1. Spec and risks.** `docs/SPEC.md`. Metrics and error costs fixed before code. (Done 12 Nov.)
-- [ ] **2. Synthetic dataset.** Suppliers, price lists, contracts, delivery notes, ~100 invoice PDFs in 3 languages, injected anomalies, ground truth. Plan in `docs/DATASET_PLAN.md`. Done when: generator is deterministic (seeded), ground truth validates against a schema, tests cover every anomaly type and the VAT trap case.
+- [ ] **2. Synthetic dataset.** Suppliers, price lists, contracts, delivery notes, ~100 invoice PDFs in 3 languages, injected anomalies, ground truth. Plan in `docs/DATASET_PLAN.md`. Done when: generator is deterministic (seeded), ground truth validates against a schema, tests cover every anomaly type and the VAT trap case. **Time box:** if it runs past 3 hours, cut scan noise and the extra layouts first (one clean layout is enough); keep everything else.
 - [ ] **3. Evaluation skeleton.** Metrics (extraction accuracy, per-type precision/recall, retrieval hit@3, guardrail pass rate), rule-based baseline with no AI, report generator. Done when: baseline numbers print reproducibly before the agent exists.
 - [ ] **4. Data layer.** SQLite schema and functions: invoices, lines, price lists, contracts, delivery notes, flags. Done when: unit tests pass and functions are reusable by agent and MCP.
 - [ ] **5. Extraction.** Invoice PDF to validated JSON (Pydantic) with confidence. Done when: field accuracy is measured with the eval harness; low confidence routes to manual review. **Time box and fallback below.**
@@ -16,7 +16,7 @@ Cut order if time runs out: task 11, then task 13. **Never cut tasks 8 and 10.**
 PDF extraction is often slower than expected. Rule: **if extraction is not working well after 2 hours, stop perfecting it.** Switch to the simple version: read PDF text with `pdfplumber` and extract the key fields with fixed rules, no AI. All later tasks stay unblocked because they work on structured data (the ground truth can stand in during development). The better Claude-based extraction is done afterwards only if time remains, and the limitation is stated plainly in the eval report.
 
 ## Tuesday 17 Nov: the core (tasks 6-8)
-- [ ] **6. RAG on contracts.** Chunking, BM25 retrieval, citation of the clause. Optional later: vectors and hybrid ranking, only if hit@3 can be compared with numbers. Done when: hit@3 is measured.
+- [ ] **6. RAG on contracts.** Chunking, BM25 retrieval, citation of the clause. Optional later: vectors and hybrid ranking, only if hit@3 can be compared with numbers. Done when: hit@3 is measured. **Cross-language rule:** contracts are English only while invoices are sv/en/it, so retrieval must query with the canonical product name or product ID from the catalog, never with the invoice-language line description (BM25 has no cross-language matching).
 - [ ] **7. Reconciliation agent.** Tool-use loop applying the five checks, producing flags with evidence. Done when: precision/recall per type are measured and compared with the baseline.
 - [ ] **8. Guardrails.** Prompt-injection defence, confidence thresholds, human approval gate, step/cost/time limits, audit log, log masking, no payment or edit tools. Done when: every rule in SPEC section 5 has a passing test.
 
@@ -26,7 +26,7 @@ PDF extraction is often slower than expected. Rule: **if extraction is not worki
 - [ ] **11. Review UI (Streamlit).** Queue where a human approves or rejects flags with the evidence next to them. First thing to cut.
 
 ## Thursday 19 Nov: docs, pitch, margin (task 12)
-- [ ] **12. Docs and pitch.** README, architecture diagram, eval report with honest limits, 5-minute pitch and likely questions (English and Swedish). Rehearse out loud. Keep time free for whatever slipped.
+- [ ] **12. Docs and pitch.** README, architecture diagram, eval report with honest limits (must include: at most one injected anomaly per invoice, while real invoices can carry two or more at once; contracts in English only), 5-minute pitch and likely questions (English and Swedish). Rehearse out loud. Keep time free for whatever slipped.
 
 ## Optional
 - [ ] **13. Supplier comparison.** Take the usual weekly basket, simulate moving purchases to another supplier using prices already in the data, report net annual saving per product. Same unit and quality only; mention delivery, minimum order and reliability. Only if everything above is done. No external price platform (prices are confidential and scraping may breach terms).
