@@ -11,9 +11,10 @@ converted) or on what an extractor really read from the PDF.
 from __future__ import annotations
 
 from collections.abc import Iterable
-from datetime import date
 
-from invoice_agent.data_gen.models import Evidence, InvoiceGroundTruth, Product, VatCategory
+from invoice_agent.data_gen.models import Evidence, InvoiceGroundTruth, Product
+from invoice_agent.db.repository import Repository
+from invoice_agent.db.seed import repository_from_reference
 from invoice_agent.evals.reference import ReferenceData
 from invoice_agent.schemas import ExtractedInvoice, ExtractedLine, Flag
 
@@ -21,50 +22,28 @@ TOLERANCE = 0.01  # 1% on price and quantity (SPEC section 6, confirmed default)
 
 
 class RuleBaseline:
-    def __init__(self, ref: ReferenceData):
-        self.ref = ref
-        self.supplier_by_org = {s.org_number: s.supplier_id for s in ref.suppliers}
-        self.products = {p.product_id: p for p in ref.products}
-        self.notes = {n.note_id: n for n in ref.delivery_notes}
-        self.clause_by_topic = {(c.supplier_id, c.topic): c.clause_id for c in ref.clauses}
-        # Archive of invoices already processed, for the duplicate check.
-        self.seen_numbers: dict[tuple[str, str], str] = {}
-        self.seen_date_totals: dict[tuple[str, date, float], str] = {}
+    """The five checks as fixed rules. All reference data comes from the shared Repository."""
 
-    # ------------------------------------------------------------ lookups
-
-    def agreed_price(self, product_id: str, day: date):
-        for entry in self.ref.price_list:
-            if entry.product_id == product_id and entry.valid_from <= day <= entry.valid_to:
-                return entry
-        return None
-
-    def vat_rule(self, category: VatCategory, day: date):
-        for rule in self.ref.vat_table:
-            if (
-                rule.category == category
-                and (rule.valid_from is None or rule.valid_from <= day)
-                and (rule.valid_to is None or day <= rule.valid_to)
-            ):
-                return rule
-        return None
+    def __init__(self, repo: Repository):
+        self.repo = repo
 
     def clause(self, supplier_id: str, topic: str) -> str | None:
-        return self.clause_by_topic.get((supplier_id, topic))
+        clause = self.repo.clause_by_topic(supplier_id, topic)
+        return clause.clause_id if clause else None
 
     # ------------------------------------------------------------ the five checks
 
     def check(self, inv: ExtractedInvoice) -> list[Flag]:
-        """Return proposed flags for one invoice. Invoices must arrive in archive order."""
-        supplier_id = self.supplier_by_org.get(inv.supplier_org_number or "")
-        if supplier_id is None or inv.delivery_date is None:
+        """Proposed flags for one invoice, compared with the archive as it is now."""
+        supplier = self.repo.supplier_by_org_number(inv.supplier_org_number)
+        if supplier is None or inv.delivery_date is None:
             return []  # cannot check without knowing who and when; extraction sends it to review
-        flags = self._check_duplicate(inv, supplier_id)
+        flags = self._check_duplicate(inv, supplier.supplier_id)
         for i, line in enumerate(inv.lines):
-            product = self.products.get(line.product_id or "")
-            if product is None or product.supplier_id != supplier_id:
+            product = self.repo.product(line.product_id)
+            if product is None or product.supplier_id != supplier.supplier_id:
                 continue  # unknown product: no reference to compare with, nothing is flagged
-            flags += self._check_line(inv, supplier_id, i, line, product)
+            flags += self._check_line(inv, supplier.supplier_id, i, line, product)
         return flags
 
     def _flag(self, inv, type_, line_index, kind, ref, clause, message) -> Flag:
@@ -78,57 +57,32 @@ class RuleBaseline:
         )
 
     def _check_duplicate(self, inv: ExtractedInvoice, supplier_id: str) -> list[Flag]:
-        if inv.document_type != "invoice" or inv.number is None:
+        if inv.document_type != "invoice":
+            return []  # a credit note legitimately refers to an earlier invoice
+        earlier = self.repo.find_earlier_invoice(
+            supplier_id, inv.number, inv.invoice_date, inv.total_incl_vat
+        )
+        if earlier is None:
             return []
+        earlier_id, reason = earlier
+        message = (
+            f"number {inv.number} already received in {earlier_id}"
+            if reason == "same_number"
+            else f"same supplier, date and total as {earlier_id}"
+        )
         clause = self.clause(supplier_id, "invoicing")
-        flags = []
-        by_number = self.seen_numbers.get((supplier_id, inv.number))
-        by_date_total = self.seen_date_totals.get(
-            (supplier_id, inv.invoice_date, inv.total_incl_vat)
-        )
-        if by_number:
-            flags.append(
-                self._flag(
-                    inv,
-                    "duplicate",
-                    None,
-                    "invoice",
-                    by_number,
-                    clause,
-                    f"number {inv.number} already received in {by_number}",
-                )
-            )
-        elif by_date_total:
-            flags.append(
-                self._flag(
-                    inv,
-                    "duplicate",
-                    None,
-                    "invoice",
-                    by_date_total,
-                    clause,
-                    f"same date and total as {by_date_total}",
-                )
-            )
-        self.seen_numbers.setdefault((supplier_id, inv.number), inv.invoice_id)
-        self.seen_date_totals.setdefault(
-            (supplier_id, inv.invoice_date, inv.total_incl_vat), inv.invoice_id
-        )
-        return flags
+        return [self._flag(inv, "duplicate", None, "invoice", earlier_id, clause, message)]
 
     def _check_line(
         self, inv: ExtractedInvoice, supplier_id: str, i: int, line: ExtractedLine, product: Product
     ) -> list[Flag]:
         flags = []
-        entry = self.agreed_price(product.product_id, inv.delivery_date)
+        entry = self.repo.agreed_price(product.product_id, inv.delivery_date)
         if entry is not None:
             agreed = entry.unit_price
-            case_price = agreed * (product.pack_weight_kg or 0)
-            if (
-                product.pack_weight_kg
-                and product.pack_weight_kg > 1
-                and abs(line.unit_price - case_price) <= case_price * TOLERANCE
-            ):
+            pack = product.pack_weight_kg or 0
+            case_price = agreed * pack
+            if pack > 1 and abs(line.unit_price - case_price) <= case_price * TOLERANCE:
                 flags.append(
                     self._flag(
                         inv,
@@ -137,8 +91,7 @@ class RuleBaseline:
                         "price_list",
                         entry.entry_id,
                         self.clause(supplier_id, "units"),
-                        f"{line.unit_price:.2f} equals the case price ({product.pack_weight_kg:g} kg "
-                        f"x {agreed:.2f}/kg)",
+                        f"{line.unit_price:.2f} equals the case price ({pack:g} kg x {agreed:.2f}/kg)",
                     )
                 )
             elif line.unit_price > agreed * (1 + TOLERANCE):
@@ -154,7 +107,7 @@ class RuleBaseline:
                     )
                 )
 
-        rule = self.vat_rule(product.vat_category, inv.delivery_date)
+        rule = self.repo.vat_rule(product.vat_category, inv.delivery_date)
         if rule is not None and abs(line.vat_rate - rule.rate) > 1e-9:
             flags.append(
                 self._flag(
@@ -169,7 +122,7 @@ class RuleBaseline:
                 )
             )
 
-        note = self.notes.get(inv.delivery_note_id or "")
+        note = self.repo.delivery_note(inv.delivery_note_id)
         if inv.document_type == "invoice" and note is not None:
             delivered = {x.product_id: x.qty for x in note.lines}.get(product.product_id, 0.0)
             if abs(line.qty - delivered) > delivered * TOLERANCE:
@@ -245,11 +198,19 @@ def ground_truth_as_extracted(gt: InvoiceGroundTruth, ref: ReferenceData) -> Ext
 def run_baseline(
     ref: ReferenceData, extracted: Iterable[ExtractedInvoice | None], review_threshold: float
 ) -> list[Flag]:
-    """Run the checks over invoices in archive order. Low-confidence reads are not checked:
-    they go to manual review, exactly as the agent will do."""
-    baseline = RuleBaseline(ref)
+    """Run the checks over invoices in arrival order, on a fresh in-memory database.
+
+    Low-confidence reads are not checked and not archived: they go to manual review, exactly as
+    the agent will do. Each checked invoice is archived after its checks, so later invoices are
+    compared with it (duplicate check).
+    """
+    repo = repository_from_reference(ref)
+    baseline = RuleBaseline(repo)
     flags: list[Flag] = []
     for inv in sorted((x for x in extracted if x is not None), key=lambda x: x.invoice_id):
-        if inv.confidence >= review_threshold:
-            flags += baseline.check(inv)
+        if inv.confidence < review_threshold:
+            continue
+        flags += baseline.check(inv)
+        supplier = repo.supplier_by_org_number(inv.supplier_org_number)
+        repo.archive_invoice(inv, supplier.supplier_id if supplier else None)
     return flags

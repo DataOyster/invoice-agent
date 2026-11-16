@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import pytest
 
+from invoice_agent.db.seed import repository_from_reference
 from invoice_agent.evals.baseline import RuleBaseline, ground_truth_as_extracted, run_baseline
 from invoice_agent.evals.metrics import detection_metrics, extraction_accuracy
 from invoice_agent.evals.reference import load_reference
@@ -66,13 +67,13 @@ def test_price_tolerance_boundary(ref):
             update={"unit_price": round(base.lines[0].unit_price * factor, 2)}
         )
         invoice = base.model_copy(update={"lines": [line, *base.lines[1:]]})
-        flags = RuleBaseline(ref).check(invoice)
+        flags = RuleBaseline(repository_from_reference(ref)).check(invoice)
         assert any(f.type == "price_above_agreement" for f in flags) == expect_flag, factor
 
 
 def test_vat_follows_delivery_date_not_invoice_date(ref):
     trap = next(g for g in ref.ground_truth if g.is_trap and "2026-04-01" in (g.trap_reason or ""))
-    flags = RuleBaseline(ref).check(ground_truth_as_extracted(trap, ref))
+    flags = RuleBaseline(repository_from_reference(ref)).check(ground_truth_as_extracted(trap, ref))
     assert not any(f.type == "wrong_vat" for f in flags)
 
 
