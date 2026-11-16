@@ -1,0 +1,38 @@
+[project]
+name = "invoice-agent"
+version = "0.1.0"
+description = "Supplier invoice reconciliation agent for restaurants (synthetic-data prototype): evaluation and guardrails first."
+requires-python = ">=3.11"
+dependencies = [
+  "anthropic",
+  "mcp",
+  "pydantic>=2",
+  "fastapi",
+  "uvicorn",
+  "streamlit",
+  "rank-bm25",
+  "reportlab",
+  "pdfplumber",
+  "python-dotenv",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov", "ruff"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+  "live: calls the real Anthropic API (needs ANTHROPIC_API_KEY); excluded from CI",
+]
+addopts = "-m 'not live'"
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
