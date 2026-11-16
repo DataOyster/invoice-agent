@@ -56,6 +56,10 @@ class ExtractionReport:
     manual_review: int  # documents the extractor sent to a human (low confidence or failure)
     unreadable_caught: int  # unreadable PDFs correctly sent to manual review
     unreadable_total: int
+    product_mapping: FieldScore  # line -> catalog product; reported apart from the key fields
+    # Reads above the review threshold with at least one wrong key field: the dangerous case,
+    # because nobody looks at them.
+    confident_but_wrong: list[str]
 
     @property
     def key_field_accuracy(self) -> float | None:
@@ -75,6 +79,8 @@ def extraction_accuracy(
     (line i of the prediction against line i of the truth).
     """
     scores = {name: FieldScore() for name in KEY_FIELDS}
+    products = FieldScore()
+    silent: list[str] = []
     readable = manual = caught = unreadable = 0
     for gt in truth:
         pred = predictions.get(gt.invoice_id)
@@ -89,20 +95,30 @@ def extraction_accuracy(
         scores["invoice_date"].total += 1
         scores["total_incl_vat"].total += 1
         scores["unit_price"].total += len(gt.lines)
+        products.total += len(gt.lines)
         if pred is None:
             continue
-        scores["number"].correct += pred.number == gt.number
-        scores["invoice_date"].correct += pred.invoice_date == gt.invoice_date
-        scores["total_incl_vat"].correct += (
-            pred.total_incl_vat is not None
-            and abs(pred.total_incl_vat - gt.total_incl_vat) <= MONEY_TOLERANCE
+        right = {
+            "number": pred.number == gt.number,
+            "invoice_date": pred.invoice_date == gt.invoice_date,
+            "total_incl_vat": pred.total_incl_vat is not None
+            and abs(pred.total_incl_vat - gt.total_incl_vat) <= MONEY_TOLERANCE,
+        }
+        prices = [
+            i < len(pred.lines)
+            and abs(pred.lines[i].unit_price - line.unit_price) <= MONEY_TOLERANCE
+            for i, line in enumerate(gt.lines)
+        ]
+        for name, ok in right.items():
+            scores[name].correct += ok
+        scores["unit_price"].correct += sum(prices)
+        products.correct += sum(
+            i < len(pred.lines) and pred.lines[i].product_id == line.product_id
+            for i, line in enumerate(gt.lines)
         )
-        for i, line in enumerate(gt.lines):
-            if i < len(pred.lines):
-                scores["unit_price"].correct += (
-                    abs(pred.lines[i].unit_price - line.unit_price) <= MONEY_TOLERANCE
-                )
-    return ExtractionReport(scores, readable, manual, caught, unreadable)
+        if not sent_to_review and not (all(right.values()) and all(prices)):
+            silent.append(gt.invoice_id)
+    return ExtractionReport(scores, readable, manual, caught, unreadable, products, silent)
 
 
 # ---------------------------------------------------------------- anomaly detection

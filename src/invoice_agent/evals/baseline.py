@@ -27,10 +27,6 @@ class RuleBaseline:
         self.products = {p.product_id: p for p in ref.products}
         self.notes = {n.note_id: n for n in ref.delivery_notes}
         self.clause_by_topic = {(c.supplier_id, c.topic): c.clause_id for c in ref.clauses}
-        # Description as printed (any language) -> product, per supplier.
-        self.product_by_name = {
-            (p.supplier_id, name.casefold()): p for p in ref.products for name in p.names.values()
-        }
         # Archive of invoices already processed, for the duplicate check.
         self.seen_numbers: dict[tuple[str, str], str] = {}
         self.seen_date_totals: dict[tuple[str, date, float], str] = {}
@@ -65,9 +61,9 @@ class RuleBaseline:
             return []  # cannot check without knowing who and when; extraction sends it to review
         flags = self._check_duplicate(inv, supplier_id)
         for i, line in enumerate(inv.lines):
-            product = self.product_by_name.get((supplier_id, line.description.casefold()))
-            if product is None:
-                continue
+            product = self.products.get(line.product_id or "")
+            if product is None or product.supplier_id != supplier_id:
+                continue  # unknown product: no reference to compare with, nothing is flagged
             flags += self._check_line(inv, supplier_id, i, line, product)
         return flags
 
@@ -191,6 +187,29 @@ class RuleBaseline:
         return flags
 
 
+def resolve_products_by_name(inv: ExtractedInvoice, ref: ReferenceData) -> ExtractedInvoice:
+    """Rule step after the regex extractor: map each printed description to a catalog product
+    by exact name (any language, case-insensitive). Variants and typos stay unmapped."""
+    supplier_id = next(
+        (s.supplier_id for s in ref.suppliers if s.org_number == inv.supplier_org_number), None
+    )
+    by_name = {
+        (p.supplier_id, name.casefold()): p.product_id
+        for p in ref.products
+        for name in p.names.values()
+    }
+    lines = [
+        line.model_copy(
+            update={
+                "product_id": line.product_id
+                or by_name.get((supplier_id, line.description.casefold()))
+            }
+        )
+        for line in inv.lines
+    ]
+    return inv.model_copy(update={"lines": lines})
+
+
 def ground_truth_as_extracted(gt: InvoiceGroundTruth, ref: ReferenceData) -> ExtractedInvoice:
     """Perfect extraction: the ground truth in the extractor's output format."""
     org = next(s.org_number for s in ref.suppliers if s.supplier_id == gt.supplier_id)
@@ -207,6 +226,7 @@ def ground_truth_as_extracted(gt: InvoiceGroundTruth, ref: ReferenceData) -> Ext
         lines=[
             ExtractedLine(
                 description=x.description,
+                product_id=x.product_id,
                 qty=x.qty,
                 unit=x.unit,
                 unit_price=x.unit_price,

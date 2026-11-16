@@ -17,6 +17,7 @@ class _Strict(BaseModel):
 
 class ExtractedLine(_Strict):
     description: str
+    product_id: str | None = None  # catalog product the line refers to, if the reader knows it
     qty: float
     unit: str  # normalised to kg / l / pcs / bottle
     unit_price: float

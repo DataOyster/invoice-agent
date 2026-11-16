@@ -191,13 +191,13 @@ def extract_text_fields(invoice_id: str, text: str) -> ExtractedInvoice:
         total_incl_vat=field("incl", lambda s: parse_number(s, language), _AMOUNT),
         confidence=1.0,
     )
-    problems += _self_check(result)
+    problems += self_check(result)
     result.problems = problems
     result.confidence = max(0.0, 1.0 - 0.25 * len(problems))
     return result
 
 
-def _self_check(inv: ExtractedInvoice) -> list[str]:
+def self_check(inv: ExtractedInvoice) -> list[str]:
     """The invoice's own arithmetic must add up; every mismatch is a reason to doubt the read."""
     problems = []
     for name in (
