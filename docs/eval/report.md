@@ -122,9 +122,25 @@ Claude extraction on the hard split: not run yet (`python -m invoice_agent.evals
 | heavy_noise | rules | 8 | 31.1% | 8 | 0.0% |
 | image_only_readable | rules | 2 | 0.0% | 2 | 0.0% |
 
+## Clause retrieval (BM25)
+
+| Query set | Supplier filter | Synonyms | Queries | hit@1 | hit@3 | Right topic in top 3 | hit@3 threshold |
+|---|---|---|---|---|---|---|---|
+| anomaly queries | no | no | 28 | 21.4% | 64.3% | 100.0% | 90.0%: **FAIL** |
+| anomaly queries | no | yes | 28 | 25.0% | 50.0% | 100.0% | 90.0%: **FAIL** |
+| anomaly queries | yes | no | 28 | 92.9% | 100.0% | 100.0% | 90.0%: pass |
+| anomaly queries | yes | yes | 28 | 100.0% | 100.0% | 100.0% | 90.0%: pass |
+| topic questions | no | no | 48 | 12.5% | 39.6% | 87.5% | 90.0%: **FAIL** |
+| topic questions | no | yes | 48 | 16.7% | 50.0% | 100.0% | 90.0%: **FAIL** |
+| topic questions | yes | no | 48 | 72.9% | 91.7% | 91.7% | 90.0%: pass |
+| topic questions | yes | yes | 48 | 93.8% | 100.0% | 100.0% | 90.0%: pass |
+
+- Without the supplier filter, retrieval finds the right kind of clause but often from another supplier: the six contracts use near-identical wording. The filter is required.
+- The synonym list was written while looking at these contracts, so the 'synonyms: yes' rows are optimistic; real contracts would need the list grown from their own wording.
+- Chance level with the filter: 3 of a supplier's 8 clauses picked at random give hit@3 37.5%. The queries and questions were also written by the developer who wrote the contracts; real reviewer questions would be harder.
+
 ## Not measured yet
 
-- Clause retrieval hit@3: task 6.
 - Guardrail pass rate: task 8.
 - Cost and time per invoice: task 7 (the baseline uses no model).
 

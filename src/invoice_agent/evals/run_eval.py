@@ -29,7 +29,9 @@ from invoice_agent.evals.report import (
     difficulty_section,
     extraction_section,
     render_report,
+    retrieval_section,
 )
+from invoice_agent.evals.retrieval import evaluate_all
 from invoice_agent.extraction.llm import to_extracted
 from invoice_agent.extraction.rules import extract_pdf
 from invoice_agent.schemas import ExtractedInvoice
@@ -159,6 +161,7 @@ def build_report(data_dir: Path, cache_root: Path = DEFAULT_CACHE, model: str | 
                         (difficulty, name, extraction_accuracy(reads, subset, REVIEW_THRESHOLD))
                     )
             sections.append(difficulty_section(rows))
+    sections.append(retrieval_section(evaluate_all(ref)))
     return render_report("Evaluation report", summary, sections, NOTES)
 
 

@@ -6,6 +6,7 @@ from invoice_agent.evals.metrics import (
     EXTRACTION_THRESHOLD,
     PRECISION_THRESHOLD,
     RECALL_THRESHOLDS,
+    RETRIEVAL_THRESHOLD,
     DetectionReport,
     ExtractionReport,
 )
@@ -105,6 +106,43 @@ def detection_section(name: str, r: DetectionReport) -> list[str]:
     return out
 
 
+def retrieval_section(scores) -> list[str]:
+    out = [
+        "## Clause retrieval (BM25)",
+        "",
+        (
+            "| Query set | Supplier filter | Synonyms | Queries | hit@1 | hit@3 | Right topic in top 3 "
+            "| hit@3 threshold |"
+        ),
+        "|---|---|---|---|---|---|---|---|",
+    ]
+    for s in scores:
+        out.append(
+            f"| {s.query_set} | {'yes' if s.supplier_filter else 'no'} "
+            f"| {'yes' if s.synonyms else 'no'} | {s.queries} | {pct(s.hit_at_1)} "
+            f"| {pct(s.hit_at_3)} | {pct(s.right_topic_at_3)} "
+            f"| {pct(RETRIEVAL_THRESHOLD)}: {verdict(s.hit_at_3, RETRIEVAL_THRESHOLD)} |"
+        )
+    out += [
+        "",
+        (
+            "- Without the supplier filter, retrieval finds the right kind of clause but often from "
+            "another supplier: the six contracts use near-identical wording. The filter is required."
+        ),
+        (
+            "- The synonym list was written while looking at these contracts, so the 'synonyms: yes' "
+            "rows are optimistic; real contracts would need the list grown from their own wording."
+        ),
+        (
+            "- Chance level with the filter: 3 of a supplier's 8 clauses picked at random give hit@3 "
+            "37.5%. The queries and questions were also written by the developer who wrote the "
+            "contracts; real reviewer questions would be harder."
+        ),
+        "",
+    ]
+    return out
+
+
 def render_report(
     title: str, dataset_summary: dict, sections: list[list[str]], notes: list[str]
 ) -> str:
@@ -116,7 +154,6 @@ def render_report(
     out += [
         "## Not measured yet",
         "",
-        "- Clause retrieval hit@3: task 6.",
         "- Guardrail pass rate: task 8.",
         "- Cost and time per invoice: task 7 (the baseline uses no model).",
         "",
