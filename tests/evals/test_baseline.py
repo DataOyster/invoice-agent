@@ -7,7 +7,7 @@ import pytest
 from invoice_agent.evals.baseline import RuleBaseline, ground_truth_as_extracted, run_baseline
 from invoice_agent.evals.metrics import detection_metrics, extraction_accuracy
 from invoice_agent.evals.reference import load_reference
-from invoice_agent.evals.run_baseline import REVIEW_THRESHOLD, build_report
+from invoice_agent.evals.run_eval import REVIEW_THRESHOLD, build_report
 from invoice_agent.extraction.rules import extract_pdf
 
 
@@ -34,8 +34,12 @@ def test_baseline_on_oracle_input_finds_every_anomaly_and_no_trap(ref):
     assert report.trap_false_alarms == []
 
 
-def test_rule_extractor_meets_the_key_field_threshold(ref, pdf_reads):
-    report = extraction_accuracy(pdf_reads, ref.ground_truth, REVIEW_THRESHOLD)
+def _standard(ref):
+    return [g for g in ref.ground_truth if g.split == "standard"]
+
+
+def test_rule_extractor_meets_the_key_field_threshold_on_the_standard_split(ref, pdf_reads):
+    report = extraction_accuracy(pdf_reads, _standard(ref), REVIEW_THRESHOLD)
     assert report.key_field_accuracy >= 0.95
 
 
@@ -84,4 +88,4 @@ def test_every_flag_cites_existing_evidence(ref):
 def test_report_is_reproducible(generated_dir):
     first = build_report(generated_dir)
     assert first == build_report(generated_dir)
-    assert "synthetic" in first and "Baseline evaluation" in first
+    assert "synthetic" in first and "## Hard split" in first

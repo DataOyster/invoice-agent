@@ -52,7 +52,8 @@ tests/{unit,adversarial,evals}
 python -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
 python -m invoice_agent.data_gen --seed 42 --out data/generated   # build the dataset
-python -m invoice_agent.evals.run_baseline   # baseline numbers -> docs/eval/baseline_report.md
+python -m invoice_agent.evals.llm_runs --split hard   # Claude extraction, cached (needs key)
+python -m invoice_agent.evals.run_eval      # report for both splits -> docs/eval/report.md (offline)
 pytest                      # offline, uses the fake LLM
 pytest -m live              # real API, manual only
 ruff check . && ruff format --check .

@@ -44,9 +44,35 @@ def extraction_section(name: str, r: ExtractionReport) -> list[str]:
         "",
         f"- Readable documents sent to manual review: {r.manual_review} of {r.readable_documents}",
         f"- Unreadable PDFs sent to manual review: {r.unreadable_caught} of {r.unreadable_total}",
+        f"- Confident but wrong (passed the self-check with a wrong key field): "
+        f"{len(r.confident_but_wrong)}"
+        + (f" ({', '.join(r.confident_but_wrong)})" if r.confident_but_wrong else ""),
+        (
+            f"- Lines mapped to the right catalog product: {r.product_mapping.correct} of "
+            f"{r.product_mapping.total} ({pct(r.product_mapping.accuracy)})"
+        ),
         "",
     ]
     return out
+
+
+def difficulty_section(rows: list[tuple[str, str, ExtractionReport]]) -> list[str]:
+    """One row per (difficulty, extractor) on the hard split."""
+    out = [
+        "### Hard split by difficulty",
+        "",
+        (
+            "| Difficulty | Extractor | Documents | Key-field accuracy | Sent to review "
+            "| Product mapping |"
+        ),
+        "|---|---|---|---|---|---|",
+    ]
+    for difficulty, extractor, r in rows:
+        out.append(
+            f"| {difficulty} | {extractor} | {r.readable_documents} | {pct(r.key_field_accuracy)} "
+            f"| {r.manual_review} | {pct(r.product_mapping.accuracy)} |"
+        )
+    return [*out, ""]
 
 
 def detection_section(name: str, r: DetectionReport) -> list[str]:
