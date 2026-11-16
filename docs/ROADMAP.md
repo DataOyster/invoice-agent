@@ -8,7 +8,7 @@ Cut order if time runs out: task 11, then task 13. **Never cut tasks 8 and 10.**
 ## Monday 16 Nov: foundations and first parts (tasks 2-5)
 - [x] **1. Spec and risks.** `docs/SPEC.md`. Metrics and error costs fixed before code. (Done 12 Nov.)
 - [x] **2. Synthetic dataset.** Suppliers, price lists, contracts, delivery notes, ~100 invoice PDFs in 3 languages, injected anomalies, ground truth. Plan in `docs/DATASET_PLAN.md`. Done when: generator is deterministic (seeded), ground truth validates against a schema, tests cover every anomaly type and the VAT trap case. **Time box:** if it runs past 3 hours, cut scan noise and the extra layouts first (one clean layout is enough); keep everything else.
-- [ ] **3. Evaluation skeleton.** Metrics (extraction accuracy, per-type precision/recall, retrieval hit@3, guardrail pass rate), rule-based baseline with no AI, report generator. Done when: baseline numbers print reproducibly before the agent exists.
+- [x] **3. Evaluation skeleton.** Metrics (extraction accuracy, per-type precision/recall, retrieval hit@3, guardrail pass rate), rule-based baseline with no AI, report generator. Done when: baseline numbers print reproducibly before the agent exists.
 - [ ] **4. Data layer.** SQLite schema and functions: invoices, lines, price lists, contracts, delivery notes, flags. Done when: unit tests pass and functions are reusable by agent and MCP.
 - [ ] **5. Extraction.** Invoice PDF to validated JSON (Pydantic) with confidence. Done when: field accuracy is measured with the eval harness; low confidence routes to manual review. **Time box and fallback below.**
 
