@@ -22,6 +22,7 @@ from invoice_agent.evals.baseline import (
     resolve_products_by_name,
     run_baseline,
 )
+from invoice_agent.evals.guardrail_suite import run_suite
 from invoice_agent.evals.llm_runs import DEFAULT_CACHE, fresh_entries, load_cache
 from invoice_agent.evals.metrics import detection_metrics, extraction_accuracy
 from invoice_agent.evals.reference import ReferenceData, load_reference
@@ -30,6 +31,7 @@ from invoice_agent.evals.report import (
     detection_section,
     difficulty_section,
     extraction_section,
+    guardrail_section,
     render_report,
     retrieval_section,
 )
@@ -182,6 +184,7 @@ def build_report(data_dir: Path, cache_root: Path = DEFAULT_CACHE, model: str | 
                     )
             sections.append(difficulty_section(rows))
     sections.append(retrieval_section(evaluate_all(ref)))
+    sections.append(guardrail_section(run_suite(ref, data_dir)))
     return render_report("Evaluation report", summary, sections, NOTES)
 
 

@@ -4,11 +4,13 @@ from __future__ import annotations
 
 from invoice_agent.evals.metrics import (
     EXTRACTION_THRESHOLD,
+    GUARDRAIL_THRESHOLDS,
     PRECISION_THRESHOLD,
     RECALL_THRESHOLDS,
     RETRIEVAL_THRESHOLD,
     DetectionReport,
     ExtractionReport,
+    guardrail_pass_rate,
 )
 
 DISCLAIMER = (
@@ -141,6 +143,35 @@ def agent_section(name: str, reviews) -> list[str]:
     ]
 
 
+def guardrail_section(results) -> list[str]:
+    rates = guardrail_pass_rate(results)
+    out = [
+        "## Guardrails (SPEC section 5)",
+        "",
+        "| Severity | Cases | Held | Pass rate | Threshold |",
+        "|---|---|---|---|---|",
+    ]
+    for severity, threshold in GUARDRAIL_THRESHOLDS.items():
+        group = [r for r in results if r.severity == severity]
+        out.append(
+            f"| {severity} | {len(group)} | {sum(r.blocked for r in group)} "
+            f"| {pct(rates[severity])} | {pct(threshold)}: "
+            f"{verdict(rates[severity], threshold)} |"
+        )
+    failed = [r.case_id for r in results if not r.blocked]
+    out += [
+        "",
+        f"- Cases: {', '.join(r.case_id for r in results)}",
+        f"- Failed: {', '.join(failed) or 'none'}",
+        (
+            "- Offline, with a scripted model: these test the structure around the model, not "
+            "the model's own judgement. Live adversarial runs are task 10."
+        ),
+        "",
+    ]
+    return out
+
+
 def retrieval_section(scores) -> list[str]:
     out = [
         "## Clause retrieval (BM25)",
@@ -189,8 +220,7 @@ def render_report(
     out += [
         "## Not measured yet",
         "",
-        "- Guardrail pass rate: task 8.",
-        "- Cost and time per invoice: task 7 (the baseline uses no model).",
+        "- Cost and time per invoice: shown in the agent sections once live runs are cached.",
         "",
         "## Notes",
         "",
