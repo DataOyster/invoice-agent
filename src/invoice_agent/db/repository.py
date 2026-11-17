@@ -26,6 +26,7 @@ from invoice_agent.data_gen.models import (
     VatCategory,
     VatRule,
 )
+from invoice_agent.guardrails.masking import mask_sensitive
 from invoice_agent.schemas import ExtractedInvoice, ExtractedLine, Flag
 
 
@@ -387,6 +388,11 @@ class Repository:
         rows = self.conn.execute("SELECT * FROM audit_log ORDER BY seq").fetchall()
         return [{**dict(r), "detail": json.loads(r["detail"])} for r in rows]
 
+    def record_event(self, actor: str, action: str, detail: dict) -> None:
+        """Append an event to the audit log (append-only; identifiers are masked)."""
+        with self.conn:
+            self._audit(actor, action, detail)
+
     def _audit(self, actor: str, action: str, detail: dict) -> None:
         self.conn.execute(
             "INSERT INTO audit_log (at, actor, action, detail) VALUES (?,?,?,?)",
@@ -394,7 +400,7 @@ class Repository:
                 datetime.now(UTC).isoformat(timespec="seconds"),
                 actor,
                 action,
-                json.dumps(detail, sort_keys=True),
+                mask_sensitive(json.dumps(detail, sort_keys=True, ensure_ascii=False)),
             ),
         )
 
