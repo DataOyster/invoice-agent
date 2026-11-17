@@ -124,6 +124,8 @@ CREATE TABLE IF NOT EXISTS flags (
     evidence_ref TEXT NOT NULL,
     clause_ref TEXT,
     message TEXT NOT NULL,
+    quote TEXT,
+    explanation TEXT,
     proposed_by TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'pending_review'
         CHECK (status IN ('pending_review', 'approved', 'rejected')),

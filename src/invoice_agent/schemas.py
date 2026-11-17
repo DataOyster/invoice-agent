@@ -53,4 +53,6 @@ class Flag(_Strict):
     line_index: int | None
     evidence: Evidence
     clause_ref: str | None = None
-    message: str
+    message: str  # what the deterministic check found, with the numbers
+    quote: str | None = None  # verbatim text of clause_ref, verified against the database
+    explanation: str | None = None  # plain-language note for the reviewer, written by the agent

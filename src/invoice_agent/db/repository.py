@@ -318,7 +318,8 @@ class Repository:
         with self.conn:
             cursor = self.conn.execute(
                 """INSERT INTO flags (invoice_id, type, line_index, evidence_kind, evidence_ref,
-                   clause_ref, message, proposed_by) VALUES (?,?,?,?,?,?,?,?)""",
+                   clause_ref, message, quote, explanation, proposed_by)
+                   VALUES (?,?,?,?,?,?,?,?,?,?)""",
                 (
                     flag.invoice_id,
                     flag.type,
@@ -327,6 +328,8 @@ class Repository:
                     flag.evidence.ref,
                     flag.clause_ref,
                     flag.message,
+                    flag.quote,
+                    flag.explanation,
                     proposed_by,
                 ),
             )
@@ -369,6 +372,8 @@ class Repository:
                     evidence={"kind": r["evidence_kind"], "ref": r["evidence_ref"]},
                     clause_ref=r["clause_ref"],
                     message=r["message"],
+                    quote=r["quote"],
+                    explanation=r["explanation"],
                 ),
                 proposed_by=r["proposed_by"],
                 status=r["status"],
