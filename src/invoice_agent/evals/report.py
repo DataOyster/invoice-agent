@@ -106,6 +106,41 @@ def detection_section(name: str, r: DetectionReport) -> list[str]:
     return out
 
 
+def agent_section(name: str, reviews) -> list[str]:
+    """How the agent behaved: calls, limits, cost, and what its contributions were worth."""
+    runs = [r.run for r in reviews if r.run is not None]
+    stopped: dict[str, int] = {}
+    for run in runs:
+        stopped[run.stopped_reason] = stopped.get(run.stopped_reason, 0) + 1
+    n = len(runs) or 1
+    flags = [f for r in reviews for f in r.flags]
+    quoted = [f for f in flags if f.type != "wrong_vat"]
+    return [
+        f"### Agent behaviour: {name}",
+        "",
+        f"- Invoices: {len(reviews)}; agent called on {len(runs)} (the others needed no model)",
+        f"- Stopped: {', '.join(f'{k} {v}' for k, v in sorted(stopped.items())) or 'n/a'}",
+        (
+            f"- Mean per call: {sum(r.steps for r in runs) / n:.1f} steps, "
+            f"{sum(r.input_tokens for r in runs) / n:.0f} input and "
+            f"{sum(r.output_tokens for r in runs) / n:.0f} output tokens, "
+            f"${sum(r.cost_usd for r in runs) / n:.4f}, {sum(r.seconds for r in runs) / n:.1f} s"
+        ),
+        f"- Lines matched to the catalog by the agent: {sum(len(r.agent_mapping) for r in reviews)}",
+        (
+            f"- Agent quotes verified / rejected: {sum(r.citations_verified for r in reviews)} / "
+            f"{sum(r.citations_rejected for r in reviews)}; flags with a verified clause quote: "
+            f"{sum(1 for f in quoted if f.quote)} of {len(quoted)}"
+        ),
+        (
+            f"- Agent findings ignored (not produced by the checks): "
+            f"{sum(r.findings_ignored for r in reviews)}"
+        ),
+        f"- Sent to manual review: {sum(1 for r in reviews if r.status == 'manual_review')}",
+        "",
+    ]
+
+
 def retrieval_section(scores) -> list[str]:
     out = [
         "## Clause retrieval (BM25)",

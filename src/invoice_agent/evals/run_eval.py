@@ -16,6 +16,7 @@ import os
 from pathlib import Path
 
 from invoice_agent.data_gen.models import InvoiceGroundTruth
+from invoice_agent.evals.agent_runs import replay
 from invoice_agent.evals.baseline import (
     ground_truth_as_extracted,
     resolve_products_by_name,
@@ -25,6 +26,7 @@ from invoice_agent.evals.llm_runs import DEFAULT_CACHE, fresh_entries, load_cach
 from invoice_agent.evals.metrics import detection_metrics, extraction_accuracy
 from invoice_agent.evals.reference import ReferenceData, load_reference
 from invoice_agent.evals.report import (
+    agent_section,
     detection_section,
     difficulty_section,
     extraction_section,
@@ -147,6 +149,24 @@ def build_report(data_dir: Path, cache_root: Path = DEFAULT_CACHE, model: str | 
                 + [f"- {k}: {v}" for k, v in claude[1].items()]
                 + [""]
             )
+        for source in ("rules", "claude"):
+            reviews = replay(ref, data_dir, split, source, cache_root, model, model)
+            if reviews is None:
+                sections.append(
+                    [
+                        (
+                            f"Agent on {split} {source} reads: not run yet "
+                            f"(`python -m invoice_agent.evals.agent_runs --split {split} "
+                            f"--input {source}`)."
+                        ),
+                        "",
+                    ]
+                )
+                continue
+            label = f"{split}, agent on {source} reads"
+            agent_flags = [f for r in reviews for f in r.flags]
+            sections.append(detection_section(label, detection_metrics(agent_flags, truth)))
+            sections.append(agent_section(label, reviews))
         if split == "hard":
             rows = []
             for difficulty in (

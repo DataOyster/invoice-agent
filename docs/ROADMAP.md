@@ -17,7 +17,7 @@ PDF extraction is often slower than expected. Rule: **if extraction is not worki
 
 ## Tuesday 17 Nov: the core (tasks 6-8)
 - [x] **6. RAG on contracts.** Chunking, BM25 retrieval, citation of the clause. Optional later: vectors and hybrid ranking, only if hit@3 can be compared with numbers. Done when: hit@3 is measured. **Cross-language rule:** contracts are English only while invoices are sv/en/it, so retrieval must query with the canonical product name or product ID from the catalog, never with the invoice-language line description (BM25 has no cross-language matching).
-- [ ] **7. Reconciliation agent.** Tool-use loop applying the five checks, producing flags with evidence. Done when: precision/recall per type are measured and compared with the baseline.
+- [ ] **7. Reconciliation agent.** Tool-use loop applying the five checks, producing flags with evidence. Done when: precision/recall per type are measured and compared with the baseline. *Status 17 Nov:* hybrid agent built (deterministic checks decide which flags exist; Claude matches oddly printed products, explains, cites; mappings and quotes validated; step/cost/time limits). Offline tests with a scripted model pass; a perfect scripted agent recovers 4 of 10 hard-split anomalies from rule reads (the other 6 sit in documents the rules cannot read). Open: live runs (`evals.llm_runs --split hard`, then `evals.agent_runs --split hard --input rules` and `--input claude`), then tick.
 - [ ] **8. Guardrails.** Prompt-injection defence, confidence thresholds, human approval gate, step/cost/time limits, audit log, log masking, no payment or edit tools. Done when: every rule in SPEC section 5 has a passing test.
 
 ## Wednesday 18 Nov: MCP, adversarial tests, UI (tasks 9-11)

@@ -63,6 +63,10 @@ Key-field accuracy: **100.0%** (threshold 95.0%: pass)
 
 Claude extraction on the standard split: not run yet (`python -m invoice_agent.evals.llm_runs --split standard`).
 
+Agent on standard rules reads: not run yet (`python -m invoice_agent.evals.agent_runs --split standard --input rules`).
+
+Agent on standard claude reads: not run yet (`python -m invoice_agent.evals.agent_runs --split standard --input claude`).
+
 ## Hard split
 
 ### Anomaly detection: hard, oracle input
@@ -112,6 +116,10 @@ Key-field accuracy: **36.7%** (threshold 95.0%: **FAIL**)
 - False flags: none
 
 Claude extraction on the hard split: not run yet (`python -m invoice_agent.evals.llm_runs --split hard`).
+
+Agent on hard rules reads: not run yet (`python -m invoice_agent.evals.agent_runs --split hard --input rules`).
+
+Agent on hard claude reads: not run yet (`python -m invoice_agent.evals.agent_runs --split hard --input claude`).
 
 ### Hard split by difficulty
 
