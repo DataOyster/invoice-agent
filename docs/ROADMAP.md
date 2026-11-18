@@ -21,7 +21,7 @@ PDF extraction is often slower than expected. Rule: **if extraction is not worki
 - [x] **8. Guardrails.** Prompt-injection defence, confidence thresholds, human approval gate, step/cost/time limits, audit log, log masking, no payment or edit tools. Done when: every rule in SPEC section 5 has a passing test.
 
 ## Wednesday 18 Nov: MCP, adversarial tests, UI (tasks 9-11)
-- [ ] **9. MCP server.** Read-only tools over the shared data layer; flag creation behind approval. Done when: Claude Desktop can answer "which suppliers raised prices this month?".
+- [ ] **9. MCP server.** Read-only tools over the shared data layer; flag creation behind approval. Done when: Claude Desktop can answer "which suppliers raised prices this month?". *Status 18 Nov:* 8 read-only tools (`mcp_server/`), database opened in SQLite read-only mode, offline demo database (`python -m invoice_agent.demo_db`), guardrail case `mcp_server_cannot_write`, setup in `docs/MCP.md`. No flag writing over MCP: flags are proposed by the pipeline and decided in the UI (decision pending with Fabio). Open: the check in Claude Desktop, then tick.
 - [ ] **10. Adversarial tests and CI.** Hidden instructions, corrupted PDFs, conflicting clauses, VAT date trap; GitHub Actions running the offline suite. Done when: suite is green and failure cases are documented.
 - [ ] **11. Review UI (Streamlit).** Queue where a human approves or rejects flags with the evidence next to them. First thing to cut.
 

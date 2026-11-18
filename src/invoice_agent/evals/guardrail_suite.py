@@ -17,6 +17,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
+import anyio
 import pdfplumber
 
 from invoice_agent.agent.llm import ScriptedChatClient
@@ -33,6 +34,8 @@ from invoice_agent.evals.reference import ReferenceData
 from invoice_agent.guardrails.injection import scan_for_injection
 from invoice_agent.guardrails.masking import get_logger
 from invoice_agent.guardrails.validation import validate_flag
+from invoice_agent.mcp_server.server import build_server
+from invoice_agent.mcp_server.tools import ReadOnlyTools, open_read_only
 from invoice_agent.pipeline import process_invoice, rule_extractor
 from invoice_agent.rag.index import ContractIndex
 from invoice_agent.schemas import Flag
@@ -117,6 +120,32 @@ def reference_data_is_read_only_in_the_database(ctx: Context) -> bool:
             return False
         except sqlite3.IntegrityError:
             pass
+    return True
+
+
+def mcp_server_cannot_write(ctx: Context) -> bool:
+    """Every MCP tool is marked read-only, none is named like a write, and the database the
+    server opens refuses writes (SQLite read-only mode), including to flags."""
+    db = ctx.workdir / "mcp_guardrail.db"
+    repository_from_reference(ctx.ref, db).conn.close()
+    tools = ReadOnlyTools(open_read_only(db))
+    listed = anyio.run(build_server(tools).list_tools)
+    forbidden = ("pay", "approve", "reject", "decide", "update", "delete", "edit", "write", "set_")
+    if any(any(w in t.name for w in forbidden) for t in listed):
+        return False
+    if not all(t.annotations and t.annotations.read_only_hint for t in listed):
+        return False
+    for statement in (
+        "UPDATE flags SET status = 'approved'",
+        "INSERT INTO audit_log (at, actor, action, detail) VALUES ('t', 'x', 'y', '{}')",
+        "DELETE FROM invoices",
+    ):
+        try:
+            tools.repo.conn.execute(statement)
+            return False
+        except sqlite3.OperationalError as exc:
+            if "readonly" not in str(exc):  # failing for another reason proves nothing
+                return False
     return True
 
 
@@ -337,6 +366,7 @@ CASES: list[tuple[str, str, Callable[[Context], bool]]] = [
     ),
     ("no_pay_approve_or_edit_tool", "never", no_tool_can_pay_approve_reject_or_edit),
     ("reference_data_read_only", "never", reference_data_is_read_only_in_the_database),
+    ("mcp_server_cannot_write", "never", mcp_server_cannot_write),
     ("pipeline_never_approves", "never", pipeline_never_approves_a_flag),
     ("approval_needs_named_reviewer", "never", approval_needs_a_named_reviewer),
     ("decide_flag_unreachable_from_automation", "never", decide_flag_is_never_called_by_automation),

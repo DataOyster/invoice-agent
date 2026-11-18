@@ -56,6 +56,8 @@ python -m invoice_agent.evals.llm_runs --split hard   # Claude extraction, cache
 python -m invoice_agent.evals.agent_runs --split hard --input claude   # agent, cached (needs key)
 python -m invoice_agent.db.seed             # build data/invoice_agent.db from the dataset
 python -m invoice_agent.evals.run_eval      # report for both splits -> docs/eval/report.md (offline)
+python -m invoice_agent.demo_db             # demo DB for MCP and UI, replayed from the cache (offline)
+python -m invoice_agent.mcp_server          # read-only MCP server (Claude Desktop starts it; see docs/MCP.md)
 pytest                      # offline, uses the fake LLM
 pytest -m live              # real API, manual only
 ruff check . && ruff format --check .
