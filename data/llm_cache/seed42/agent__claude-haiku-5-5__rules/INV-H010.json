@@ -1,0 +1,115 @@
+{
+  "cost_usd": 0.0011829000000000002,
+  "input_sha256": "6328ffe97a9eba61cbffc49cc2788825c43948291990d941a4b2799bddc25fb9",
+  "input_tokens": 8429,
+  "output_tokens": 680,
+  "seconds": 14.64,
+  "steps": 3,
+  "stopped_reason": "submitted",
+  "submitted": {
+    "findings": [
+      {
+        "clause_id": null,
+        "explanation": "Line charged at 12% VAT. The VAT table (VAT-FOOD-06) gives 6% for a delivery dated 2026-05-19.",
+        "line_index": 0,
+        "quote": null,
+        "type": "wrong_vat"
+      },
+      {
+        "clause_id": null,
+        "explanation": "Line charged at 12% VAT. The VAT table (VAT-FOOD-06) gives 6% for a delivery dated 2026-05-19.",
+        "line_index": 1,
+        "quote": null,
+        "type": "wrong_vat"
+      },
+      {
+        "clause_id": null,
+        "explanation": "Line charged at 12% VAT. The VAT table (VAT-FOOD-06) gives 6% for a delivery dated 2026-05-19.",
+        "line_index": 2,
+        "quote": null,
+        "type": "wrong_vat"
+      }
+    ],
+    "product_mapping": [
+      {
+        "line_index": 0,
+        "product_id": "P507"
+      },
+      {
+        "line_index": 1,
+        "product_id": "P512"
+      },
+      {
+        "line_index": 2,
+        "product_id": "P505"
+      }
+    ]
+  },
+  "tool_calls": [
+    {
+      "input": {},
+      "name": "list_supplier_products"
+    },
+    {
+      "input": {
+        "product_mapping": [
+          {
+            "line_index": 0,
+            "product_id": "P507"
+          },
+          {
+            "line_index": 1,
+            "product_id": "P512"
+          },
+          {
+            "line_index": 2,
+            "product_id": "P505"
+          }
+        ]
+      },
+      "name": "run_checks"
+    },
+    {
+      "input": {
+        "findings": [
+          {
+            "clause_id": null,
+            "explanation": "Line charged at 12% VAT. The VAT table (VAT-FOOD-06) gives 6% for a delivery dated 2026-05-19.",
+            "line_index": 0,
+            "quote": null,
+            "type": "wrong_vat"
+          },
+          {
+            "clause_id": null,
+            "explanation": "Line charged at 12% VAT. The VAT table (VAT-FOOD-06) gives 6% for a delivery dated 2026-05-19.",
+            "line_index": 1,
+            "quote": null,
+            "type": "wrong_vat"
+          },
+          {
+            "clause_id": null,
+            "explanation": "Line charged at 12% VAT. The VAT table (VAT-FOOD-06) gives 6% for a delivery dated 2026-05-19.",
+            "line_index": 2,
+            "quote": null,
+            "type": "wrong_vat"
+          }
+        ],
+        "product_mapping": [
+          {
+            "line_index": 0,
+            "product_id": "P507"
+          },
+          {
+            "line_index": 1,
+            "product_id": "P512"
+          },
+          {
+            "line_index": 2,
+            "product_id": "P505"
+          }
+        ]
+      },
+      "name": "submit_review"
+    }
+  ]
+}

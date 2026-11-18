@@ -1,0 +1,83 @@
+{
+  "cost_usd": 0.001034,
+  "input_sha256": "682fc1b60e88b13f2e380019a038ca460600ae5c975fcdac499b45689323ef4e",
+  "input_tokens": 8250,
+  "output_tokens": 418,
+  "seconds": 4.22,
+  "steps": 3,
+  "stopped_reason": "submitted",
+  "submitted": {
+    "findings": [],
+    "product_mapping": [
+      {
+        "line_index": 0,
+        "product_id": "P202"
+      },
+      {
+        "line_index": 1,
+        "product_id": "P201"
+      },
+      {
+        "line_index": 2,
+        "product_id": "P203"
+      },
+      {
+        "line_index": 3,
+        "product_id": "P209"
+      }
+    ]
+  },
+  "tool_calls": [
+    {
+      "input": {},
+      "name": "list_supplier_products"
+    },
+    {
+      "input": {
+        "product_mapping": [
+          {
+            "line_index": 0,
+            "product_id": "P202"
+          },
+          {
+            "line_index": 1,
+            "product_id": "P201"
+          },
+          {
+            "line_index": 2,
+            "product_id": "P203"
+          },
+          {
+            "line_index": 3,
+            "product_id": "P209"
+          }
+        ]
+      },
+      "name": "run_checks"
+    },
+    {
+      "input": {
+        "findings": [],
+        "product_mapping": [
+          {
+            "line_index": 0,
+            "product_id": "P202"
+          },
+          {
+            "line_index": 1,
+            "product_id": "P201"
+          },
+          {
+            "line_index": 2,
+            "product_id": "P203"
+          },
+          {
+            "line_index": 3,
+            "product_id": "P209"
+          }
+        ]
+      },
+      "name": "submit_review"
+    }
+  ]
+}

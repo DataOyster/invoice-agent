@@ -1,0 +1,60 @@
+{
+  "error": null,
+  "input_tokens": 8220,
+  "invoice_id": "INV-H004",
+  "model": "claude-haiku-5-5",
+  "output_tokens": 945,
+  "pdf_sha256": "7dbfb9f461cdbfc213df4c553c943cb1c65d7a2e392c3f7379dd1771d8d5399c",
+  "read": {
+    "credits_invoice_number": null,
+    "delivery_date": "2026-01-29",
+    "delivery_note_id": "DN-0097",
+    "document_type": "invoice",
+    "invoice_date": "2026-02-02",
+    "language": "en",
+    "lines": [
+      {
+        "description": "Unsa. butt.",
+        "line_total": 599.5,
+        "product_id": "P303",
+        "qty": 5.5,
+        "unit": "kg",
+        "unit_price": 109.0,
+        "vat_rate": 0.12
+      },
+      {
+        "description": "Freer-ange eggs 30 pcs",
+        "line_total": 1869.0,
+        "product_id": "P306",
+        "qty": 21.0,
+        "unit": "pcs",
+        "unit_price": 89.0,
+        "vat_rate": 0.12
+      },
+      {
+        "description": "Creme fraiche 34% (case)",
+        "line_total": 225.51,
+        "product_id": "P308",
+        "qty": 3.0,
+        "unit": "l",
+        "unit_price": 75.17,
+        "vat_rate": 0.12
+      },
+      {
+        "description": "Aged hard cheese 4kg-case",
+        "line_total": 4117.0,
+        "product_id": "P309",
+        "qty": 23.0,
+        "unit": "kg",
+        "unit_price": 179.0,
+        "vat_rate": 0.12
+      }
+    ],
+    "number": "MU-2026-0235",
+    "supplier_org_number": "000000-0003",
+    "total_excl_vat": 6811.01,
+    "total_incl_vat": 7628.33,
+    "vat_total": 817.32
+  },
+  "seconds": 4.69
+}

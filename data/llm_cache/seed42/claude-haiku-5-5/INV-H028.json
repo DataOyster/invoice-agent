@@ -1,0 +1,78 @@
+{
+  "error": null,
+  "input_tokens": 8269,
+  "invoice_id": "INV-H028",
+  "model": "claude-haiku-5-5",
+  "output_tokens": 1397,
+  "pdf_sha256": "98c1a505dbf57a2e8c8ea895344bc2ce4a3600c0a69f040ae1e172e6afffcba5",
+  "read": {
+    "credits_invoice_number": null,
+    "delivery_date": "2026-10-16",
+    "delivery_note_id": "DN-0118",
+    "document_type": "invoice",
+    "invoice_date": "2026-10-16",
+    "language": "sv",
+    "lines": [
+      {
+        "description": "Gösfilé",
+        "line_total": 1670.74,
+        "product_id": "P109",
+        "qty": 5.5,
+        "unit": "kg",
+        "unit_price": 303.77,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Rödingfilé",
+        "line_total": 1059.03,
+        "product_id": "P107",
+        "qty": 4.5,
+        "unit": "kg",
+        "unit_price": 235.34,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Torskrygg",
+        "line_total": 4806.17,
+        "product_id": "P102",
+        "qty": 19.5,
+        "unit": "kg",
+        "unit_price": 246.47,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Kokta räkor",
+        "line_total": 2565.87,
+        "product_id": "P104",
+        "qty": 15.5,
+        "unit": "kg",
+        "unit_price": 165.54,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Stenbitsrom 100 g",
+        "line_total": 72.82,
+        "product_id": "P112",
+        "qty": 2.0,
+        "unit": "pcs",
+        "unit_price": 36.41,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Bläckfisk rensad",
+        "line_total": 1467.73,
+        "product_id": "P108",
+        "qty": 11.0,
+        "unit": "kg",
+        "unit_price": 133.43,
+        "vat_rate": 0.06
+      }
+    ],
+    "number": "KF-2026-0154",
+    "supplier_org_number": "000000-0001",
+    "total_excl_vat": 11642.36,
+    "total_incl_vat": 12340.9,
+    "vat_total": 698.54
+  },
+  "seconds": 6.16
+}

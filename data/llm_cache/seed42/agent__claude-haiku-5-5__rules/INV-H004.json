@@ -1,0 +1,105 @@
+{
+  "cost_usd": 0.0015259000000000002,
+  "input_sha256": "1bd03f6d1495282e42bf6598a0b6fd1a3fa7675b6e7ebd8f21401f73dfe18f49",
+  "input_tokens": 12334,
+  "output_tokens": 585,
+  "seconds": 30.64,
+  "steps": 4,
+  "stopped_reason": "submitted",
+  "submitted": {
+    "findings": [
+      {
+        "clause_id": "S03-C2",
+        "explanation": "Line 2 (Crème fraîche 34%) is invoiced at 75.17 per litre, while the agreed price on price list PL-P308-1 is 58.00. The contract locks agreed prices per Annex A, and increases require a signed revised Annex.",
+        "line_index": 2,
+        "quote": "Agreed remuneration per item follows Annex A and is locked for the period printed there.",
+        "type": "price_above_agreement"
+      }
+    ],
+    "product_mapping": [
+      {
+        "line_index": 0,
+        "product_id": "P303"
+      },
+      {
+        "line_index": 1,
+        "product_id": "P306"
+      },
+      {
+        "line_index": 2,
+        "product_id": "P308"
+      },
+      {
+        "line_index": 3,
+        "product_id": "P309"
+      }
+    ]
+  },
+  "tool_calls": [
+    {
+      "input": {},
+      "name": "list_supplier_products"
+    },
+    {
+      "input": {
+        "product_mapping": [
+          {
+            "line_index": 0,
+            "product_id": "P303"
+          },
+          {
+            "line_index": 1,
+            "product_id": "P306"
+          },
+          {
+            "line_index": 2,
+            "product_id": "P308"
+          },
+          {
+            "line_index": 3,
+            "product_id": "P309"
+          }
+        ]
+      },
+      "name": "run_checks"
+    },
+    {
+      "input": {
+        "query": "Creme fraiche 34% agreed price"
+      },
+      "name": "search_contract"
+    },
+    {
+      "input": {
+        "findings": [
+          {
+            "clause_id": "S03-C2",
+            "explanation": "Line 2 (Crème fraîche 34%) is invoiced at 75.17 per litre, while the agreed price on price list PL-P308-1 is 58.00. The contract locks agreed prices per Annex A, and increases require a signed revised Annex.",
+            "line_index": 2,
+            "quote": "Agreed remuneration per item follows Annex A and is locked for the period printed there.",
+            "type": "price_above_agreement"
+          }
+        ],
+        "product_mapping": [
+          {
+            "line_index": 0,
+            "product_id": "P303"
+          },
+          {
+            "line_index": 1,
+            "product_id": "P306"
+          },
+          {
+            "line_index": 2,
+            "product_id": "P308"
+          },
+          {
+            "line_index": 3,
+            "product_id": "P309"
+          }
+        ]
+      },
+      "name": "submit_review"
+    }
+  ]
+}

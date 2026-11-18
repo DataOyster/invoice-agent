@@ -1,0 +1,50 @@
+{
+  "cost_usd": 0.0009556,
+  "input_sha256": "3d7f6b390a9fb7380c553564ec1709ee3e5ec0131d698d80aceebd191b07a274",
+  "input_tokens": 7601,
+  "output_tokens": 391,
+  "seconds": 4.89,
+  "steps": 3,
+  "stopped_reason": "submitted",
+  "submitted": {
+    "findings": [
+      {
+        "clause_id": "S04-C2",
+        "explanation": "Line 5 (Aceto balsamico, P407) is invoiced at 93.17 per litre, while the agreed price on price list PL-P407-1 is 89.00. The contract fixes prices at the Annex A level.",
+        "line_index": 5,
+        "quote": "Dispensa Lindqvarn AB may not charge any remuneration above the Annex A price applicable on the day the goods are handed over.",
+        "type": "price_above_agreement"
+      }
+    ],
+    "product_mapping": []
+  },
+  "tool_calls": [
+    {
+      "input": {
+        "product_mapping": []
+      },
+      "name": "run_checks"
+    },
+    {
+      "input": {
+        "query": "balsamic vinegar agreed price per litre"
+      },
+      "name": "search_contract"
+    },
+    {
+      "input": {
+        "findings": [
+          {
+            "clause_id": "S04-C2",
+            "explanation": "Line 5 (Aceto balsamico, P407) is invoiced at 93.17 per litre, while the agreed price on price list PL-P407-1 is 89.00. The contract fixes prices at the Annex A level.",
+            "line_index": 5,
+            "quote": "Dispensa Lindqvarn AB may not charge any remuneration above the Annex A price applicable on the day the goods are handed over.",
+            "type": "price_above_agreement"
+          }
+        ],
+        "product_mapping": []
+      },
+      "name": "submit_review"
+    }
+  ]
+}

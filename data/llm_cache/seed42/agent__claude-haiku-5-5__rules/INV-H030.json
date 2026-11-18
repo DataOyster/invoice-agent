@@ -1,0 +1,71 @@
+{
+  "cost_usd": 0.000968,
+  "input_sha256": "5b5cc42f35baf641179e1b291e357a5b68519dee2ec45ed2525f611709884ebd",
+  "input_tokens": 8090,
+  "output_tokens": 318,
+  "seconds": 14.75,
+  "steps": 3,
+  "stopped_reason": "submitted",
+  "submitted": {
+    "findings": [],
+    "product_mapping": [
+      {
+        "line_index": 0,
+        "product_id": "P507"
+      },
+      {
+        "line_index": 1,
+        "product_id": "P504"
+      },
+      {
+        "line_index": 2,
+        "product_id": "P511"
+      }
+    ]
+  },
+  "tool_calls": [
+    {
+      "input": {},
+      "name": "list_supplier_products"
+    },
+    {
+      "input": {
+        "product_mapping": [
+          {
+            "line_index": 0,
+            "product_id": "P507"
+          },
+          {
+            "line_index": 1,
+            "product_id": "P504"
+          },
+          {
+            "line_index": 2,
+            "product_id": "P511"
+          }
+        ]
+      },
+      "name": "run_checks"
+    },
+    {
+      "input": {
+        "findings": [],
+        "product_mapping": [
+          {
+            "line_index": 0,
+            "product_id": "P507"
+          },
+          {
+            "line_index": 1,
+            "product_id": "P504"
+          },
+          {
+            "line_index": 2,
+            "product_id": "P511"
+          }
+        ]
+      },
+      "name": "submit_review"
+    }
+  ]
+}

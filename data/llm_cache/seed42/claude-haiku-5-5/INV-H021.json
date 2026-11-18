@@ -1,0 +1,69 @@
+{
+  "error": null,
+  "input_tokens": 8227,
+  "invoice_id": "INV-H021",
+  "model": "claude-haiku-5-5",
+  "output_tokens": 861,
+  "pdf_sha256": "942164e5c0ce7cf6318e2003ea43b00d1003c425ab262ab93c7734a6f212a185",
+  "read": {
+    "credits_invoice_number": null,
+    "delivery_date": "2026-08-24",
+    "delivery_note_id": "DN-0112",
+    "document_type": "invoice",
+    "invoice_date": "2026-08-25",
+    "language": "en",
+    "lines": [
+      {
+        "description": "Creme fraiche 34%",
+        "line_total": 609.0,
+        "product_id": "P308",
+        "qty": 10.5,
+        "unit": "l",
+        "unit_price": 58.0,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Parmesan 24 months",
+        "line_total": 2745.5,
+        "product_id": "P304",
+        "qty": 9.5,
+        "unit": "kg",
+        "unit_price": 289.0,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Ricotta",
+        "line_total": 1424.0,
+        "product_id": "P310",
+        "qty": 16.0,
+        "unit": "kg",
+        "unit_price": 89.0,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Unsalted butter",
+        "line_total": 2016.5,
+        "product_id": "P303",
+        "qty": 18.5,
+        "unit": "kg",
+        "unit_price": 109.0,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Free-range eggs 30 pcs",
+        "line_total": 1513.0,
+        "product_id": "P306",
+        "qty": 17.0,
+        "unit": "pcs",
+        "unit_price": 89.0,
+        "vat_rate": 0.06
+      }
+    ],
+    "number": "MU-2026-0236",
+    "supplier_org_number": "000000-0003",
+    "total_excl_vat": 8308.0,
+    "total_incl_vat": 8806.48,
+    "vat_total": 498.48
+  },
+  "seconds": 5.09
+}

@@ -1,0 +1,50 @@
+{
+  "cost_usd": 0.0009026,
+  "input_sha256": "118193641dee9b6f712f602ea575c437215d5eae52e1b26fe1054e54324028ff",
+  "input_tokens": 6966,
+  "output_tokens": 412,
+  "seconds": 14.36,
+  "steps": 3,
+  "stopped_reason": "submitted",
+  "submitted": {
+    "findings": [
+      {
+        "clause_id": "S05-C5",
+        "explanation": "Invoice EB-2026-0313 (INV-H026) has the same supplier, date and total as INV-H025. The contract voids a billing that repeats an earlier billing for the same day and amount, so the reviewer should confirm whether this is a double billing.",
+        "line_index": null,
+        "quote": "A document repeating an earlier serial number or an earlier billing for the same day and amount is void.",
+        "type": "duplicate"
+      }
+    ],
+    "product_mapping": []
+  },
+  "tool_calls": [
+    {
+      "input": {
+        "product_mapping": []
+      },
+      "name": "run_checks"
+    },
+    {
+      "input": {
+        "query": "duplicate invoice same supplier date and total"
+      },
+      "name": "search_contract"
+    },
+    {
+      "input": {
+        "findings": [
+          {
+            "clause_id": "S05-C5",
+            "explanation": "Invoice EB-2026-0313 (INV-H026) has the same supplier, date and total as INV-H025. The contract voids a billing that repeats an earlier billing for the same day and amount, so the reviewer should confirm whether this is a double billing.",
+            "line_index": null,
+            "quote": "A document repeating an earlier serial number or an earlier billing for the same day and amount is void.",
+            "type": "duplicate"
+          }
+        ],
+        "product_mapping": []
+      },
+      "name": "submit_review"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "error": null,
+  "input_tokens": 8129,
+  "invoice_id": "INV-H020",
+  "model": "claude-haiku-5-5",
+  "output_tokens": 495,
+  "pdf_sha256": "7e1506a43e74a5c857197ab6ce86b86fa5274dab905d94a7b64a81f11c8d355e",
+  "read": {
+    "credits_invoice_number": "CS-2026-0339",
+    "delivery_date": "2026-08-07",
+    "delivery_note_id": null,
+    "document_type": "credit_note",
+    "invoice_date": "2026-08-17",
+    "language": "it",
+    "lines": [
+      {
+        "description": "Spumante 75 cl",
+        "line_total": -158.0,
+        "product_id": "P603",
+        "qty": -2.0,
+        "unit": "bottle",
+        "unit_price": 79.0,
+        "vat_rate": 0.25
+      }
+    ],
+    "number": "CS-CN-2026-003",
+    "supplier_org_number": "000000-0006",
+    "total_excl_vat": -158.0,
+    "total_incl_vat": -197.5,
+    "vat_total": -39.5
+  },
+  "seconds": 4.56
+}

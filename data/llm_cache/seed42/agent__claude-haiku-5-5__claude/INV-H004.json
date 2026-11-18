@@ -1,0 +1,50 @@
+{
+  "cost_usd": 0.0009699000000000001,
+  "input_sha256": "65a74828b3600145fafd4226f58777d501bb68ce5f7ecc94c1180dccfe0d7936",
+  "input_tokens": 7224,
+  "output_tokens": 495,
+  "seconds": 13.75,
+  "steps": 3,
+  "stopped_reason": "submitted",
+  "submitted": {
+    "findings": [
+      {
+        "clause_id": "S03-C2",
+        "explanation": "Line 2 (Creme fraiche 34%) is invoiced at 75.17, while the agreed price in the price list PL-P308-1 is 58.00. The contract locks agreed prices and requires a signed revised Annex for any increase.",
+        "line_index": 2,
+        "quote": "Agreed remuneration per item follows Annex A and is locked for the period printed there.",
+        "type": "price_above_agreement"
+      }
+    ],
+    "product_mapping": []
+  },
+  "tool_calls": [
+    {
+      "input": {
+        "product_mapping": []
+      },
+      "name": "run_checks"
+    },
+    {
+      "input": {
+        "query": "Creme fraiche 34% agreed unit price per case"
+      },
+      "name": "search_contract"
+    },
+    {
+      "input": {
+        "findings": [
+          {
+            "clause_id": "S03-C2",
+            "explanation": "Line 2 (Creme fraiche 34%) is invoiced at 75.17, while the agreed price in the price list PL-P308-1 is 58.00. The contract locks agreed prices and requires a signed revised Annex for any increase.",
+            "line_index": 2,
+            "quote": "Agreed remuneration per item follows Annex A and is locked for the period printed there.",
+            "type": "price_above_agreement"
+          }
+        ],
+        "product_mapping": []
+      },
+      "name": "submit_review"
+    }
+  ]
+}

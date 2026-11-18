@@ -1,0 +1,60 @@
+{
+  "error": null,
+  "input_tokens": 8213,
+  "invoice_id": "INV-H011",
+  "model": "claude-haiku-5-5",
+  "output_tokens": 900,
+  "pdf_sha256": "fa0ebf0285448d882c787404580f662c9755d35458d68cb00c1a1d79c919d2b4",
+  "read": {
+    "credits_invoice_number": null,
+    "delivery_date": "2026-05-29",
+    "delivery_note_id": "DN-0104",
+    "document_type": "invoice",
+    "invoice_date": "2026-06-06",
+    "language": "it",
+    "lines": [
+      {
+        "description": "Birra lager 5,2% 33 cl",
+        "line_total": 149.0,
+        "product_id": "P605",
+        "qty": 10.0,
+        "unit": "bottle",
+        "unit_price": 14.9,
+        "vat_rate": 0.25
+      },
+      {
+        "description": "Amaro alle erbe 70 cl",
+        "line_total": 4780.0,
+        "product_id": "P611",
+        "qty": 20.0,
+        "unit": "bottle",
+        "unit_price": 239.0,
+        "vat_rate": 0.25
+      },
+      {
+        "description": "Spumante 75 cl",
+        "line_total": 632.0,
+        "product_id": "P603",
+        "qty": 8.0,
+        "unit": "bottle",
+        "unit_price": 79.0,
+        "vat_rate": 0.25
+      },
+      {
+        "description": "Gin 70 cl",
+        "line_total": 6417.0,
+        "product_id": "P609",
+        "qty": 23.0,
+        "unit": "bottle",
+        "unit_price": 279.0,
+        "vat_rate": 0.25
+      }
+    ],
+    "number": "CS-2026-0337",
+    "supplier_org_number": "000000-0006",
+    "total_excl_vat": 11978.0,
+    "total_incl_vat": 14972.5,
+    "vat_total": 2994.5
+  },
+  "seconds": 4.09
+}

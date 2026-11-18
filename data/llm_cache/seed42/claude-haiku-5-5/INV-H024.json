@@ -1,0 +1,60 @@
+{
+  "error": null,
+  "input_tokens": 8174,
+  "invoice_id": "INV-H024",
+  "model": "claude-haiku-5-5",
+  "output_tokens": 829,
+  "pdf_sha256": "7a11a269af55213f05ef3a823646959a77934fb8aea7b45032c0cf7963177751",
+  "read": {
+    "credits_invoice_number": null,
+    "delivery_date": "2026-09-18",
+    "delivery_note_id": "DN-0115",
+    "document_type": "invoice",
+    "invoice_date": "2026-09-20",
+    "language": "sv",
+    "lines": [
+      {
+        "description": "Kokta räkor",
+        "line_total": 2152.02,
+        "product_id": "P104",
+        "qty": 13.0,
+        "unit": "kg",
+        "unit_price": 165.54,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Torskrygg",
+        "line_total": 4189.99,
+        "product_id": "P102",
+        "qty": 17.0,
+        "unit": "kg",
+        "unit_price": 246.47,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Sillfilé",
+        "line_total": 1008.48,
+        "product_id": "P106",
+        "qty": 12.0,
+        "unit": "kg",
+        "unit_price": 84.04,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Stenbitsrom 100 g",
+        "line_total": 728.2,
+        "product_id": "P112",
+        "qty": 20.0,
+        "unit": "pcs",
+        "unit_price": 36.41,
+        "vat_rate": 0.06
+      }
+    ],
+    "number": "KF-2026-0153",
+    "supplier_org_number": "000000-0001",
+    "total_excl_vat": 8078.69,
+    "total_incl_vat": 8563.41,
+    "vat_total": 484.72
+  },
+  "seconds": 6.12
+}

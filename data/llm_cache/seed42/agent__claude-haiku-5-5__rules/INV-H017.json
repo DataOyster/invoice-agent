@@ -1,0 +1,93 @@
+{
+  "cost_usd": 0.0014595,
+  "input_sha256": "4e50dad20cfc1074075548085ad9f04a33b9e6c4e4fd5e14a5e7ab7302444fba",
+  "input_tokens": 11785,
+  "output_tokens": 562,
+  "seconds": 13.88,
+  "steps": 4,
+  "stopped_reason": "submitted",
+  "submitted": {
+    "findings": [
+      {
+        "clause_id": "S05-C4",
+        "explanation": "The unit price of 610.95 equals the case price (5 kg x 122.19/kg) rather than a per-kg price, while the line is billed as 12 kg. The contract states per-kg items are charged by net weight, not by case.",
+        "line_index": 0,
+        "quote": "Cases and boxes are packaging only and never a unit of charge for such items.",
+        "type": "unit_confusion"
+      }
+    ],
+    "product_mapping": [
+      {
+        "line_index": 0,
+        "product_id": "P503"
+      },
+      {
+        "line_index": 1,
+        "product_id": "P506"
+      },
+      {
+        "line_index": 2,
+        "product_id": "P502"
+      }
+    ]
+  },
+  "tool_calls": [
+    {
+      "input": {},
+      "name": "list_supplier_products"
+    },
+    {
+      "input": {
+        "product_mapping": [
+          {
+            "line_index": 0,
+            "product_id": "P503"
+          },
+          {
+            "line_index": 1,
+            "product_id": "P506"
+          },
+          {
+            "line_index": 2,
+            "product_id": "P502"
+          }
+        ]
+      },
+      "name": "run_checks"
+    },
+    {
+      "input": {
+        "query": "Chicken breast price per kg unit of measure"
+      },
+      "name": "search_contract"
+    },
+    {
+      "input": {
+        "findings": [
+          {
+            "clause_id": "S05-C4",
+            "explanation": "The unit price of 610.95 equals the case price (5 kg x 122.19/kg) rather than a per-kg price, while the line is billed as 12 kg. The contract states per-kg items are charged by net weight, not by case.",
+            "line_index": 0,
+            "quote": "Cases and boxes are packaging only and never a unit of charge for such items.",
+            "type": "unit_confusion"
+          }
+        ],
+        "product_mapping": [
+          {
+            "line_index": 0,
+            "product_id": "P503"
+          },
+          {
+            "line_index": 1,
+            "product_id": "P506"
+          },
+          {
+            "line_index": 2,
+            "product_id": "P502"
+          }
+        ]
+      },
+      "name": "submit_review"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "error": null,
+  "input_tokens": 8268,
+  "invoice_id": "INV-H013",
+  "model": "claude-haiku-5-5",
+  "output_tokens": 1179,
+  "pdf_sha256": "b9986e016557ae359cf545c237f492907e659ed2dd7a3ed69c6cc7cd89a591aa",
+  "read": {
+    "credits_invoice_number": null,
+    "delivery_date": "2026-06-04",
+    "delivery_note_id": "DN-0106",
+    "document_type": "invoice",
+    "invoice_date": "2026-06-11",
+    "language": "en",
+    "lines": [
+      {
+        "description": "Pork blely 2.5 kg",
+        "line_total": 222.5,
+        "product_id": "P504",
+        "qty": 2.5,
+        "unit": "kg",
+        "unit_price": 89.0,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Chicken breast 5kg-case",
+        "line_total": 402.5,
+        "product_id": "P503",
+        "qty": 3.5,
+        "unit": "kg",
+        "unit_price": 115.0,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Slic. cured ham",
+        "line_total": 5933.0,
+        "product_id": "P508",
+        "qty": 17.0,
+        "unit": "kg",
+        "unit_price": 349.0,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Beef stock (case)",
+        "line_total": 1421.0,
+        "product_id": "P511",
+        "qty": 29.0,
+        "unit": "l",
+        "unit_price": 49.0,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Italian-style sausages 3kg-case",
+        "line_total": 1112.0,
+        "product_id": "P510",
+        "qty": 8.0,
+        "unit": "kg",
+        "unit_price": 139.0,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Lmab rack",
+        "line_total": 10612.0,
+        "product_id": "P505",
+        "qty": 28.0,
+        "unit": "kg",
+        "unit_price": 379.0,
+        "vat_rate": 0.06
+      }
+    ],
+    "number": "EB-2026-0307",
+    "supplier_org_number": "000000-0005",
+    "total_excl_vat": 19703.0,
+    "total_incl_vat": 20885.18,
+    "vat_total": 1182.18
+  },
+  "seconds": 5.03
+}

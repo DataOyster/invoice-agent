@@ -1,0 +1,51 @@
+{
+  "error": null,
+  "input_tokens": 8141,
+  "invoice_id": "INV-H008",
+  "model": "claude-haiku-5-5",
+  "output_tokens": 659,
+  "pdf_sha256": "17e1762c6fd5311316c5cf04df0695a1b379a894a0c3b3d2ece79e01b7c947f0",
+  "read": {
+    "credits_invoice_number": null,
+    "delivery_date": "2026-03-31",
+    "delivery_note_id": "DN-0101",
+    "document_type": "invoice",
+    "invoice_date": "2026-04-10",
+    "language": "sv",
+    "lines": [
+      {
+        "description": "Kokta räkor",
+        "line_total": 3418.5,
+        "product_id": "P104",
+        "qty": 21.5,
+        "unit": "kg",
+        "unit_price": 159.0,
+        "vat_rate": 0.12
+      },
+      {
+        "description": "Laxfilé",
+        "line_total": 3496.5,
+        "product_id": "P101",
+        "qty": 18.5,
+        "unit": "kg",
+        "unit_price": 189.0,
+        "vat_rate": 0.12
+      },
+      {
+        "description": "Fiskfond",
+        "line_total": 354.0,
+        "product_id": "P111",
+        "qty": 6.0,
+        "unit": "l",
+        "unit_price": 59.0,
+        "vat_rate": 0.12
+      }
+    ],
+    "number": "KF-2026-0152",
+    "supplier_org_number": "000000-0001",
+    "total_excl_vat": 7269.0,
+    "total_incl_vat": 8141.28,
+    "vat_total": 872.28
+  },
+  "seconds": 3.33
+}

@@ -1,0 +1,72 @@
+{
+  "cost_usd": 0.0006988,
+  "input_sha256": "7d2d70133407d03da803334c4bd79ed4aa522641ed5ee1627c67950fb0daf84e",
+  "input_tokens": 4423,
+  "output_tokens": 513,
+  "seconds": 3.89,
+  "steps": 2,
+  "stopped_reason": "submitted",
+  "submitted": {
+    "findings": [
+      {
+        "clause_id": null,
+        "explanation": "Invoice applies 12% VAT to diced pancetta, but the VAT table (VAT-FOOD-06) gives 6% for a delivery dated 2026-05-19.",
+        "line_index": 0,
+        "quote": null,
+        "type": "wrong_vat"
+      },
+      {
+        "clause_id": null,
+        "explanation": "Invoice applies 12% VAT to sliced bacon, but the VAT table (VAT-FOOD-06) gives 6% for a delivery dated 2026-05-19.",
+        "line_index": 1,
+        "quote": null,
+        "type": "wrong_vat"
+      },
+      {
+        "clause_id": null,
+        "explanation": "Invoice applies 12% VAT to lamb rack, but the VAT table (VAT-FOOD-06) gives 6% for a delivery dated 2026-05-19.",
+        "line_index": 2,
+        "quote": null,
+        "type": "wrong_vat"
+      }
+    ],
+    "product_mapping": []
+  },
+  "tool_calls": [
+    {
+      "input": {
+        "product_mapping": []
+      },
+      "name": "run_checks"
+    },
+    {
+      "input": {
+        "findings": [
+          {
+            "clause_id": null,
+            "explanation": "Invoice applies 12% VAT to diced pancetta, but the VAT table (VAT-FOOD-06) gives 6% for a delivery dated 2026-05-19.",
+            "line_index": 0,
+            "quote": null,
+            "type": "wrong_vat"
+          },
+          {
+            "clause_id": null,
+            "explanation": "Invoice applies 12% VAT to sliced bacon, but the VAT table (VAT-FOOD-06) gives 6% for a delivery dated 2026-05-19.",
+            "line_index": 1,
+            "quote": null,
+            "type": "wrong_vat"
+          },
+          {
+            "clause_id": null,
+            "explanation": "Invoice applies 12% VAT to lamb rack, but the VAT table (VAT-FOOD-06) gives 6% for a delivery dated 2026-05-19.",
+            "line_index": 2,
+            "quote": null,
+            "type": "wrong_vat"
+          }
+        ],
+        "product_mapping": []
+      },
+      "name": "submit_review"
+    }
+  ]
+}

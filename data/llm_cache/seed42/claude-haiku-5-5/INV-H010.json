@@ -1,0 +1,51 @@
+{
+  "error": null,
+  "input_tokens": 8193,
+  "invoice_id": "INV-H010",
+  "model": "claude-haiku-5-5",
+  "output_tokens": 738,
+  "pdf_sha256": "5b5a1c00b88f0276edc904ba2ace091635b47bd0cd5c04af4eff37c910df1a96",
+  "read": {
+    "credits_invoice_number": null,
+    "delivery_date": "2026-05-19",
+    "delivery_note_id": "DN-0103",
+    "document_type": "invoice",
+    "invoice_date": "2026-05-21",
+    "language": "en",
+    "lines": [
+      {
+        "description": "Diced pancetta 2kg-case",
+        "line_total": 1134.0,
+        "product_id": "P507",
+        "qty": 6.0,
+        "unit": "kg",
+        "unit_price": 189.0,
+        "vat_rate": 0.12
+      },
+      {
+        "description": "Sliced bacon 2kg-case",
+        "line_total": 3094.0,
+        "product_id": "P512",
+        "qty": 26.0,
+        "unit": "kg",
+        "unit_price": 119.0,
+        "vat_rate": 0.12
+      },
+      {
+        "description": "Lamb rack 3kg-case",
+        "line_total": 4548.0,
+        "product_id": "P505",
+        "qty": 12.0,
+        "unit": "kg",
+        "unit_price": 379.0,
+        "vat_rate": 0.12
+      }
+    ],
+    "number": "EB-2026-0306",
+    "supplier_org_number": "000000-0005",
+    "total_excl_vat": 8776.0,
+    "total_incl_vat": 9829.12,
+    "vat_total": 1053.12
+  },
+  "seconds": 5.2
+}

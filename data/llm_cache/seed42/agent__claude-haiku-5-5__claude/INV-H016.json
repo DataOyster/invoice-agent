@@ -1,0 +1,50 @@
+{
+  "cost_usd": 0.0009294,
+  "input_sha256": "d9e83f5caacfd85a4b00dea9c18bd0a4b8e16ce72ee76970f6774c5130594097",
+  "input_tokens": 6929,
+  "output_tokens": 473,
+  "seconds": 5.84,
+  "steps": 3,
+  "stopped_reason": "submitted",
+  "submitted": {
+    "findings": [
+      {
+        "clause_id": "S06-C5",
+        "explanation": "Invoice number CS-2026-0338 is already recorded in INV-H012 from the same supplier. The contract says each bill carries its own serial number and repeated bills for an already billed consignment are not payable.",
+        "line_index": null,
+        "quote": "Every bill carries its own serial number and covers one consignment only. Repeated bills for an already billed consignment are not payable.",
+        "type": "duplicate"
+      }
+    ],
+    "product_mapping": []
+  },
+  "tool_calls": [
+    {
+      "input": {
+        "product_mapping": []
+      },
+      "name": "run_checks"
+    },
+    {
+      "input": {
+        "query": "duplicate invoice number"
+      },
+      "name": "search_contract"
+    },
+    {
+      "input": {
+        "findings": [
+          {
+            "clause_id": "S06-C5",
+            "explanation": "Invoice number CS-2026-0338 is already recorded in INV-H012 from the same supplier. The contract says each bill carries its own serial number and repeated bills for an already billed consignment are not payable.",
+            "line_index": null,
+            "quote": "Every bill carries its own serial number and covers one consignment only. Repeated bills for an already billed consignment are not payable.",
+            "type": "duplicate"
+          }
+        ],
+        "product_mapping": []
+      },
+      "name": "submit_review"
+    }
+  ]
+}

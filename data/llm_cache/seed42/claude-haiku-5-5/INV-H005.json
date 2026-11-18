@@ -1,0 +1,69 @@
+{
+  "error": null,
+  "input_tokens": 7850,
+  "invoice_id": "INV-H005",
+  "model": "claude-haiku-5-5",
+  "output_tokens": 1046,
+  "pdf_sha256": "d4ca4bb2f17c52016462d50c64a2e85e5bf9c74d6561d81db59be4c5b6b238be",
+  "read": {
+    "credits_invoice_number": null,
+    "delivery_date": "2026-03-18",
+    "delivery_note_id": "DN-0098",
+    "document_type": "invoice",
+    "invoice_date": "2026-03-27",
+    "language": "it",
+    "lines": [
+      {
+        "description": "Olio extravergine di oliva",
+        "line_total": 535.5,
+        "product_id": "P403",
+        "qty": 4.5,
+        "unit": "l",
+        "unit_price": 119.0,
+        "vat_rate": 0.12
+      },
+      {
+        "description": "Spaghetti",
+        "line_total": 140.0,
+        "product_id": "P401",
+        "qty": 5.0,
+        "unit": "kg",
+        "unit_price": 28.0,
+        "vat_rate": 0.12
+      },
+      {
+        "description": "Sale marino grosso",
+        "line_total": 171.0,
+        "product_id": "P406",
+        "qty": 9.0,
+        "unit": "kg",
+        "unit_price": 19.0,
+        "vat_rate": 0.12
+      },
+      {
+        "description": "Rotolo di alluminio",
+        "line_total": 855.0,
+        "product_id": "P412",
+        "qty": 9.0,
+        "unit": "pcs",
+        "unit_price": 95.0,
+        "vat_rate": 0.25
+      },
+      {
+        "description": "Tovaglioli di carta 500 pz",
+        "line_total": 483.0,
+        "product_id": "P411",
+        "qty": 7.0,
+        "unit": "pcs",
+        "unit_price": 69.0,
+        "vat_rate": 0.25
+      }
+    ],
+    "number": "DL-2026-0262",
+    "supplier_org_number": "000000-0004",
+    "total_excl_vat": 2184.5,
+    "total_incl_vat": 2620.58,
+    "vat_total": 436.08
+  },
+  "seconds": 4.52
+}

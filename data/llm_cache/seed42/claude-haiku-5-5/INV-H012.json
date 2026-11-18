@@ -1,0 +1,51 @@
+{
+  "error": null,
+  "input_tokens": 8161,
+  "invoice_id": "INV-H012",
+  "model": "claude-haiku-5-5",
+  "output_tokens": 732,
+  "pdf_sha256": "38c569d91863af522538b5265b71cfcba6f994d0644743299c7b73882c38f5d3",
+  "read": {
+    "credits_invoice_number": null,
+    "delivery_date": "2026-06-05",
+    "delivery_note_id": "DN-0105",
+    "document_type": "invoice",
+    "invoice_date": "2026-06-07",
+    "language": "it",
+    "lines": [
+      {
+        "description": "Liquore al limone 70 cl",
+        "line_total": 657.0,
+        "product_id": "P608",
+        "qty": 3.0,
+        "unit": "bottle",
+        "unit_price": 219.0,
+        "vat_rate": 0.25
+      },
+      {
+        "description": "Nebbiolo riserva 75 cl",
+        "line_total": 4886.0,
+        "product_id": "P604",
+        "qty": 14.0,
+        "unit": "bottle",
+        "unit_price": 349.0,
+        "vat_rate": 0.25
+      },
+      {
+        "description": "Spumante 75 cl",
+        "line_total": 1027.0,
+        "product_id": "P603",
+        "qty": 13.0,
+        "unit": "bottle",
+        "unit_price": 79.0,
+        "vat_rate": 0.25
+      }
+    ],
+    "number": "CS-2026-0338",
+    "supplier_org_number": "000000-0006",
+    "total_excl_vat": 6570.0,
+    "total_incl_vat": 8212.5,
+    "vat_total": 1642.5
+  },
+  "seconds": 3.7
+}

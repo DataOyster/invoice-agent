@@ -1,0 +1,60 @@
+{
+  "error": null,
+  "input_tokens": 8221,
+  "invoice_id": "INV-H007",
+  "model": "claude-haiku-5-5",
+  "output_tokens": 971,
+  "pdf_sha256": "7b41fa72e06b8245e7d72bc2e2239baac2295dcc53df6d41cc06dc3f6a8d67e4",
+  "read": {
+    "credits_invoice_number": null,
+    "delivery_date": "2026-03-19",
+    "delivery_note_id": "DN-0100",
+    "document_type": "invoice",
+    "invoice_date": "2026-04-02",
+    "language": "en",
+    "lines": [
+      {
+        "description": "Beef tend.",
+        "line_total": 3438.5,
+        "product_id": "P501",
+        "qty": 6.5,
+        "unit": "kg",
+        "unit_price": 529.0,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Beef stock (case)",
+        "line_total": 1004.5,
+        "product_id": "P511",
+        "qty": 20.5,
+        "unit": "l",
+        "unit_price": 49.0,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Slcied bacon",
+        "line_total": 1666.0,
+        "product_id": "P512",
+        "qty": 14.0,
+        "unit": "kg",
+        "unit_price": 119.0,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "MINCED BEEF 10% 5KG-CASE",
+        "line_total": 2722.5,
+        "product_id": "P502",
+        "qty": 27.5,
+        "unit": "kg",
+        "unit_price": 99.0,
+        "vat_rate": 0.06
+      }
+    ],
+    "number": "EB-2026-0305",
+    "supplier_org_number": "000000-0005",
+    "total_excl_vat": 8831.5,
+    "total_incl_vat": 9361.39,
+    "vat_total": 529.89
+  },
+  "seconds": 4.55
+}

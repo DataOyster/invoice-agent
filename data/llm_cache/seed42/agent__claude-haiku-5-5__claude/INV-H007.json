@@ -1,0 +1,86 @@
+{
+  "cost_usd": 0.0007802000000000001,
+  "input_sha256": "9e2c927ec511e6d341c305cd179e85bc4003f91f5ff1d7306338bdc94e8ba9fe",
+  "input_tokens": 4677,
+  "output_tokens": 625,
+  "seconds": 3.92,
+  "steps": 2,
+  "stopped_reason": "submitted",
+  "submitted": {
+    "findings": [
+      {
+        "clause_id": null,
+        "explanation": "Invoice applies 6% VAT, but the VAT table (VAT-FOOD-12) requires 12% for a delivery dated 2026-03-19.",
+        "line_index": 0,
+        "quote": null,
+        "type": "wrong_vat"
+      },
+      {
+        "clause_id": null,
+        "explanation": "Invoice applies 6% VAT, but the VAT table (VAT-FOOD-12) requires 12% for a delivery dated 2026-03-19.",
+        "line_index": 1,
+        "quote": null,
+        "type": "wrong_vat"
+      },
+      {
+        "clause_id": null,
+        "explanation": "Invoice applies 6% VAT, but the VAT table (VAT-FOOD-12) requires 12% for a delivery dated 2026-03-19.",
+        "line_index": 2,
+        "quote": null,
+        "type": "wrong_vat"
+      },
+      {
+        "clause_id": null,
+        "explanation": "Invoice applies 6% VAT, but the VAT table (VAT-FOOD-12) requires 12% for a delivery dated 2026-03-19.",
+        "line_index": 3,
+        "quote": null,
+        "type": "wrong_vat"
+      }
+    ],
+    "product_mapping": []
+  },
+  "tool_calls": [
+    {
+      "input": {
+        "product_mapping": []
+      },
+      "name": "run_checks"
+    },
+    {
+      "input": {
+        "findings": [
+          {
+            "clause_id": null,
+            "explanation": "Invoice applies 6% VAT, but the VAT table (VAT-FOOD-12) requires 12% for a delivery dated 2026-03-19.",
+            "line_index": 0,
+            "quote": null,
+            "type": "wrong_vat"
+          },
+          {
+            "clause_id": null,
+            "explanation": "Invoice applies 6% VAT, but the VAT table (VAT-FOOD-12) requires 12% for a delivery dated 2026-03-19.",
+            "line_index": 1,
+            "quote": null,
+            "type": "wrong_vat"
+          },
+          {
+            "clause_id": null,
+            "explanation": "Invoice applies 6% VAT, but the VAT table (VAT-FOOD-12) requires 12% for a delivery dated 2026-03-19.",
+            "line_index": 2,
+            "quote": null,
+            "type": "wrong_vat"
+          },
+          {
+            "clause_id": null,
+            "explanation": "Invoice applies 6% VAT, but the VAT table (VAT-FOOD-12) requires 12% for a delivery dated 2026-03-19.",
+            "line_index": 3,
+            "quote": null,
+            "type": "wrong_vat"
+          }
+        ],
+        "product_mapping": []
+      },
+      "name": "submit_review"
+    }
+  ]
+}

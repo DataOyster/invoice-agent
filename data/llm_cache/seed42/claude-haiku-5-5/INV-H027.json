@@ -1,0 +1,51 @@
+{
+  "error": null,
+  "input_tokens": 8143,
+  "invoice_id": "INV-H027",
+  "model": "claude-haiku-5-5",
+  "output_tokens": 764,
+  "pdf_sha256": "25546774fb2b7811efa0beffc5de86381347c57bff86a9b8f0ad6a8f9e5ba81a",
+  "read": {
+    "credits_invoice_number": null,
+    "delivery_date": "2026-10-08",
+    "delivery_note_id": "DN-0117",
+    "document_type": "invoice",
+    "invoice_date": "2026-10-10",
+    "language": "en",
+    "lines": [
+      {
+        "description": "Duck breast",
+        "line_total": 6375.83,
+        "product_id": "P509",
+        "qty": 23.0,
+        "unit": "kg",
+        "unit_price": 277.21,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Lamb rack",
+        "line_total": 4142.78,
+        "product_id": "P505",
+        "qty": 10.5,
+        "unit": "kg",
+        "unit_price": 394.55,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Italian-style sausages",
+        "line_total": 2442.33,
+        "product_id": "P510",
+        "qty": 16.5,
+        "unit": "kg",
+        "unit_price": 148.02,
+        "vat_rate": 0.06
+      }
+    ],
+    "number": "EB-2026-0311",
+    "supplier_org_number": "000000-0005",
+    "total_excl_vat": 12960.94,
+    "total_incl_vat": 13738.6,
+    "vat_total": 777.66
+  },
+  "seconds": 6.14
+}

@@ -1,0 +1,50 @@
+{
+  "cost_usd": 0.0009735,
+  "input_sha256": "c8033ad205364b51d7ded4d7f30e1ee31870e1f152630273456a19aba45e45b7",
+  "input_tokens": 7575,
+  "output_tokens": 432,
+  "seconds": 5.92,
+  "steps": 3,
+  "stopped_reason": "submitted",
+  "submitted": {
+    "findings": [
+      {
+        "clause_id": "S02-C4",
+        "explanation": "Line 1 (Äpplen, 13.5 kg at 312.00) is priced at the case price (13 kg x 24.00/kg), not a per-kg price. Per the contract, per-kg items are charged by net weight, so the line appears to be billed per case rather than per kg.",
+        "line_index": 1,
+        "quote": "Items in Annex A marked per kilogram are charged by net weight. Cases and boxes are packaging only and never a unit of charge for such items.",
+        "type": "unit_confusion"
+      }
+    ],
+    "product_mapping": []
+  },
+  "tool_calls": [
+    {
+      "input": {
+        "product_mapping": []
+      },
+      "name": "run_checks"
+    },
+    {
+      "input": {
+        "query": "apples unit of sale price per kg case"
+      },
+      "name": "search_contract"
+    },
+    {
+      "input": {
+        "findings": [
+          {
+            "clause_id": "S02-C4",
+            "explanation": "Line 1 (Äpplen, 13.5 kg at 312.00) is priced at the case price (13 kg x 24.00/kg), not a per-kg price. Per the contract, per-kg items are charged by net weight, so the line appears to be billed per case rather than per kg.",
+            "line_index": 1,
+            "quote": "Items in Annex A marked per kilogram are charged by net weight. Cases and boxes are packaging only and never a unit of charge for such items.",
+            "type": "unit_confusion"
+          }
+        ],
+        "product_mapping": []
+      },
+      "name": "submit_review"
+    }
+  ]
+}

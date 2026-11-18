@@ -1,0 +1,51 @@
+{
+  "error": null,
+  "input_tokens": 8183,
+  "invoice_id": "INV-H017",
+  "model": "claude-haiku-5-5",
+  "output_tokens": 779,
+  "pdf_sha256": "e1e17d04c4f4556a06dd6a9eb25ba753d6fca63d4c7bd7352273048d7600637e",
+  "read": {
+    "credits_invoice_number": null,
+    "delivery_date": "2026-07-09",
+    "delivery_note_id": "DN-0109",
+    "document_type": "invoice",
+    "invoice_date": "2026-07-16",
+    "language": "en",
+    "lines": [
+      {
+        "description": "CHCIKEN BREAST",
+        "line_total": 7331.4,
+        "product_id": "P503",
+        "qty": 12.0,
+        "unit": "kg",
+        "unit_price": 610.95,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Veal esca.",
+        "line_total": 2439.92,
+        "product_id": "P506",
+        "qty": 7.0,
+        "unit": "kg",
+        "unit_price": 348.56,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Minc. beef 10%",
+        "line_total": 360.33,
+        "product_id": "P502",
+        "qty": 3.5,
+        "unit": "kg",
+        "unit_price": 102.95,
+        "vat_rate": 0.06
+      }
+    ],
+    "number": "EB-2026-0308",
+    "supplier_org_number": "000000-0005",
+    "total_excl_vat": 10131.65,
+    "total_incl_vat": 10739.55,
+    "vat_total": 607.9
+  },
+  "seconds": 4.22
+}

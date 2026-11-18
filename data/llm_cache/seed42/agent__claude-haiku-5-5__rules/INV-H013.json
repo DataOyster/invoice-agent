@@ -1,0 +1,107 @@
+{
+  "cost_usd": 0.001106,
+  "input_sha256": "d9bcc4c0279f573d944c44c5a3a969c38029c875e26cc14858c8bed5437ea1ea",
+  "input_tokens": 8945,
+  "output_tokens": 423,
+  "seconds": 8.95,
+  "steps": 3,
+  "stopped_reason": "submitted",
+  "submitted": {
+    "findings": [],
+    "product_mapping": [
+      {
+        "line_index": 0,
+        "product_id": "P504"
+      },
+      {
+        "line_index": 1,
+        "product_id": "P503"
+      },
+      {
+        "line_index": 2,
+        "product_id": "P508"
+      },
+      {
+        "line_index": 3,
+        "product_id": "P511"
+      },
+      {
+        "line_index": 4,
+        "product_id": "P510"
+      },
+      {
+        "line_index": 5,
+        "product_id": "P505"
+      }
+    ]
+  },
+  "tool_calls": [
+    {
+      "input": {},
+      "name": "list_supplier_products"
+    },
+    {
+      "input": {
+        "product_mapping": [
+          {
+            "line_index": 0,
+            "product_id": "P504"
+          },
+          {
+            "line_index": 1,
+            "product_id": "P503"
+          },
+          {
+            "line_index": 2,
+            "product_id": "P508"
+          },
+          {
+            "line_index": 3,
+            "product_id": "P511"
+          },
+          {
+            "line_index": 4,
+            "product_id": "P510"
+          },
+          {
+            "line_index": 5,
+            "product_id": "P505"
+          }
+        ]
+      },
+      "name": "run_checks"
+    },
+    {
+      "input": {
+        "findings": [],
+        "product_mapping": [
+          {
+            "line_index": 0,
+            "product_id": "P504"
+          },
+          {
+            "line_index": 1,
+            "product_id": "P503"
+          },
+          {
+            "line_index": 2,
+            "product_id": "P508"
+          },
+          {
+            "line_index": 3,
+            "product_id": "P511"
+          },
+          {
+            "line_index": 4,
+            "product_id": "P510"
+          },
+          {
+            "line_index": 5,
+            "product_id": "P505"
+          }
+        ]
+      },
+      "name": "submit_review"
+    }
+  ]
+}

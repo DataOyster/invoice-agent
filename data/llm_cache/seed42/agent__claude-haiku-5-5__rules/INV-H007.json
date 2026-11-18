@@ -1,0 +1,141 @@
+{
+  "cost_usd": 0.0012987,
+  "input_sha256": "734d9764e2490790fa137a2db3ddc6aad222c0e5311c01c7851e5c480add6415",
+  "input_tokens": 8847,
+  "output_tokens": 828,
+  "seconds": 12.36,
+  "steps": 3,
+  "stopped_reason": "submitted",
+  "submitted": {
+    "findings": [
+      {
+        "clause_id": null,
+        "explanation": "Line 0 is invoiced at 6% VAT, but the VAT table gives 12% for a delivery dated 2026-03-19.",
+        "line_index": 0,
+        "quote": null,
+        "type": "wrong_vat"
+      },
+      {
+        "clause_id": null,
+        "explanation": "Line 1 is invoiced at 6% VAT, but the VAT table gives 12% for a delivery dated 2026-03-19.",
+        "line_index": 1,
+        "quote": null,
+        "type": "wrong_vat"
+      },
+      {
+        "clause_id": null,
+        "explanation": "Line 2 is invoiced at 6% VAT, but the VAT table gives 12% for a delivery dated 2026-03-19.",
+        "line_index": 2,
+        "quote": null,
+        "type": "wrong_vat"
+      },
+      {
+        "clause_id": null,
+        "explanation": "Line 3 is invoiced at 6% VAT, but the VAT table gives 12% for a delivery dated 2026-03-19.",
+        "line_index": 3,
+        "quote": null,
+        "type": "wrong_vat"
+      }
+    ],
+    "product_mapping": [
+      {
+        "line_index": 0,
+        "product_id": "P501"
+      },
+      {
+        "line_index": 1,
+        "product_id": "P511"
+      },
+      {
+        "line_index": 2,
+        "product_id": "P512"
+      },
+      {
+        "line_index": 3,
+        "product_id": "P502"
+      }
+    ]
+  },
+  "tool_calls": [
+    {
+      "input": {},
+      "name": "list_supplier_products"
+    },
+    {
+      "input": {
+        "product_mapping": [
+          {
+            "line_index": 0,
+            "product_id": "P501"
+          },
+          {
+            "line_index": 1,
+            "product_id": "P511"
+          },
+          {
+            "line_index": 2,
+            "product_id": "P512"
+          },
+          {
+            "line_index": 3,
+            "product_id": "P502"
+          }
+        ]
+      },
+      "name": "run_checks"
+    },
+    {
+      "input": {
+        "findings": [
+          {
+            "clause_id": null,
+            "explanation": "Line 0 is invoiced at 6% VAT, but the VAT table gives 12% for a delivery dated 2026-03-19.",
+            "line_index": 0,
+            "quote": null,
+            "type": "wrong_vat"
+          },
+          {
+            "clause_id": null,
+            "explanation": "Line 1 is invoiced at 6% VAT, but the VAT table gives 12% for a delivery dated 2026-03-19.",
+            "line_index": 1,
+            "quote": null,
+            "type": "wrong_vat"
+          },
+          {
+            "clause_id": null,
+            "explanation": "Line 2 is invoiced at 6% VAT, but the VAT table gives 12% for a delivery dated 2026-03-19.",
+            "line_index": 2,
+            "quote": null,
+            "type": "wrong_vat"
+          },
+          {
+            "clause_id": null,
+            "explanation": "Line 3 is invoiced at 6% VAT, but the VAT table gives 12% for a delivery dated 2026-03-19.",
+            "line_index": 3,
+            "quote": null,
+            "type": "wrong_vat"
+          }
+        ],
+        "product_mapping": [
+          {
+            "line_index": 0,
+            "product_id": "P501"
+          },
+          {
+            "line_index": 1,
+            "product_id": "P511"
+          },
+          {
+            "line_index": 2,
+            "product_id": "P512"
+          },
+          {
+            "line_index": 3,
+            "product_id": "P502"
+          }
+        ]
+      },
+      "name": "submit_review"
+    }
+  ]
+}

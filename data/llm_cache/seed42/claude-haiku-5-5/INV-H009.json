@@ -1,0 +1,60 @@
+{
+  "error": null,
+  "input_tokens": 8198,
+  "invoice_id": "INV-H009",
+  "model": "claude-haiku-5-5",
+  "output_tokens": 827,
+  "pdf_sha256": "4ad6f2e268bce9a53b153dce250e80d98ff3fdb3bb30c175e44ad8ea4b321dc0",
+  "read": {
+    "credits_invoice_number": null,
+    "delivery_date": "2026-05-08",
+    "delivery_note_id": "DN-0102",
+    "document_type": "invoice",
+    "invoice_date": "2026-05-10",
+    "language": "sv",
+    "lines": [
+      {
+        "description": "POTA.",
+        "line_total": 66.5,
+        "product_id": "P202",
+        "qty": 7.0,
+        "unit": "kg",
+        "unit_price": 9.5,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Toma.",
+        "line_total": 544.0,
+        "product_id": "P201",
+        "qty": 17.0,
+        "unit": "kg",
+        "unit_price": 32.0,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "uGl lök",
+        "line_total": 148.5,
+        "product_id": "P203",
+        "qty": 13.5,
+        "unit": "kg",
+        "unit_price": 11.0,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "ZUCHCINI",
+        "line_total": 136.0,
+        "product_id": "P209",
+        "qty": 4.0,
+        "unit": "kg",
+        "unit_price": 34.0,
+        "vat_rate": 0.06
+      }
+    ],
+    "number": "GH-2026-0190",
+    "supplier_org_number": "000000-0002",
+    "total_excl_vat": 895.0,
+    "total_incl_vat": 948.7,
+    "vat_total": 53.7
+  },
+  "seconds": 3.84
+}

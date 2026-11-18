@@ -1,0 +1,60 @@
+{
+  "error": null,
+  "input_tokens": 8184,
+  "invoice_id": "INV-H003",
+  "model": "claude-haiku-5-5",
+  "output_tokens": 888,
+  "pdf_sha256": "26bfdcb9ee9de9840e4cf57f4df1783dbf9d4c9cdff7f141ab357afed37066d2",
+  "read": {
+    "credits_invoice_number": null,
+    "delivery_date": "2026-01-22",
+    "delivery_note_id": "DN-0096",
+    "document_type": "invoice",
+    "invoice_date": "2026-01-28",
+    "language": "en",
+    "lines": [
+      {
+        "description": "QAURK",
+        "line_total": 1192.5,
+        "product_id": "P312",
+        "qty": 26.5,
+        "unit": "kg",
+        "unit_price": 45.0,
+        "vat_rate": 0.12
+      },
+      {
+        "description": "Creme friache 34%",
+        "line_total": 1044.0,
+        "product_id": "P308",
+        "qty": 18.0,
+        "unit": "l",
+        "unit_price": 58.0,
+        "vat_rate": 0.12
+      },
+      {
+        "description": "Greek yogh. 10%",
+        "line_total": 1188.0,
+        "product_id": "P307",
+        "qty": 22.0,
+        "unit": "kg",
+        "unit_price": 54.0,
+        "vat_rate": 0.12
+      },
+      {
+        "description": "Wohle milk 3%",
+        "line_total": 270.6,
+        "product_id": "P301",
+        "qty": 20.5,
+        "unit": "l",
+        "unit_price": 13.2,
+        "vat_rate": 0.12
+      }
+    ],
+    "number": "MU-2026-0234",
+    "supplier_org_number": "000000-0003",
+    "total_excl_vat": 3695.1,
+    "total_incl_vat": 4138.51,
+    "vat_total": 443.41
+  },
+  "seconds": 5.33
+}

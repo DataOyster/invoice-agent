@@ -1,0 +1,78 @@
+{
+  "error": null,
+  "input_tokens": 8259,
+  "invoice_id": "INV-H002",
+  "model": "claude-haiku-5-5",
+  "output_tokens": 1103,
+  "pdf_sha256": "d751357b0d8ccdcb817db32b4770cfea9e042a35517a1c00bf217ad2c386bd2d",
+  "read": {
+    "credits_invoice_number": null,
+    "delivery_date": "2026-01-20",
+    "delivery_note_id": "DN-0095",
+    "document_type": "invoice",
+    "invoice_date": "2026-01-27",
+    "language": "en",
+    "lines": [
+      {
+        "description": "Sliced cured ham",
+        "line_total": 1745.0,
+        "product_id": "P508",
+        "qty": 5.0,
+        "unit": "kg",
+        "unit_price": 349.0,
+        "vat_rate": 0.12
+      },
+      {
+        "description": "Beef tenderloin",
+        "line_total": 11373.5,
+        "product_id": "P501",
+        "qty": 21.5,
+        "unit": "kg",
+        "unit_price": 529.0,
+        "vat_rate": 0.12
+      },
+      {
+        "description": "Italian-style sausages",
+        "line_total": 1112.0,
+        "product_id": "P510",
+        "qty": 8.0,
+        "unit": "kg",
+        "unit_price": 139.0,
+        "vat_rate": 0.12
+      },
+      {
+        "description": "Minced beef 10%",
+        "line_total": 544.5,
+        "product_id": "P502",
+        "qty": 5.5,
+        "unit": "kg",
+        "unit_price": 99.0,
+        "vat_rate": 0.12
+      },
+      {
+        "description": "Chicken breast",
+        "line_total": 2185.0,
+        "product_id": "P503",
+        "qty": 19.0,
+        "unit": "kg",
+        "unit_price": 115.0,
+        "vat_rate": 0.12
+      },
+      {
+        "description": "Beef stock",
+        "line_total": 931.0,
+        "product_id": "P511",
+        "qty": 19.0,
+        "unit": "l",
+        "unit_price": 49.0,
+        "vat_rate": 0.12
+      }
+    ],
+    "number": "EB-2026-0304",
+    "supplier_org_number": "000000-0005",
+    "total_excl_vat": 17891.0,
+    "total_incl_vat": 20037.92,
+    "vat_total": 2146.92
+  },
+  "seconds": 4.84
+}

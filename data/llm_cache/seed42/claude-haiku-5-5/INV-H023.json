@@ -1,0 +1,51 @@
+{
+  "error": null,
+  "input_tokens": 8179,
+  "invoice_id": "INV-H023",
+  "model": "claude-haiku-5-5",
+  "output_tokens": 672,
+  "pdf_sha256": "379de9eec5d211d7ed270ec784d8a7b1e3a4eadd97a440a5a55e73cb01b41b82",
+  "read": {
+    "credits_invoice_number": null,
+    "delivery_date": "2026-09-04",
+    "delivery_note_id": "DN-0114",
+    "document_type": "invoice",
+    "invoice_date": "2026-09-13",
+    "language": "sv",
+    "lines": [
+      {
+        "description": "Persilja knippe",
+        "line_total": 216.0,
+        "product_id": "P211",
+        "qty": 18.0,
+        "unit": "pcs",
+        "unit_price": 12.0,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Tomater",
+        "line_total": 928.0,
+        "product_id": "P201",
+        "qty": 29.0,
+        "unit": "kg",
+        "unit_price": 32.0,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Äpplen",
+        "line_total": 180.0,
+        "product_id": "P212",
+        "qty": 7.5,
+        "unit": "kg",
+        "unit_price": 24.0,
+        "vat_rate": 0.06
+      }
+    ],
+    "number": "GH-2026-0192",
+    "supplier_org_number": "000000-0002",
+    "total_excl_vat": 1324.0,
+    "total_incl_vat": 1403.44,
+    "vat_total": 79.44
+  },
+  "seconds": 5.97
+}

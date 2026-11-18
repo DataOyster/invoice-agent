@@ -1,0 +1,50 @@
+{
+  "cost_usd": 0.0010164,
+  "input_sha256": "5d7581ef897b947b41e901ddeb56ad6dc61c3804528e1c7aa14b97ee05077b4f",
+  "input_tokens": 7549,
+  "output_tokens": 523,
+  "seconds": 4.61,
+  "steps": 3,
+  "stopped_reason": "submitted",
+  "submitted": {
+    "findings": [
+      {
+        "clause_id": "S05-C3",
+        "explanation": "Line 3 (Veal escalope) is billed at 3.5 kg, but delivery note DN-0110 records 3 kg. The contract says only the quantities on the signed receipt may be billed.",
+        "line_index": 3,
+        "quote": "The quantities acknowledged on the signed consignment receipt are binding; only those quantities may be billed.",
+        "type": "quantity_mismatch"
+      }
+    ],
+    "product_mapping": []
+  },
+  "tool_calls": [
+    {
+      "input": {
+        "product_mapping": []
+      },
+      "name": "run_checks"
+    },
+    {
+      "input": {
+        "query": "billed quantity must match delivered quantity delivery note Veal escalope"
+      },
+      "name": "search_contract"
+    },
+    {
+      "input": {
+        "findings": [
+          {
+            "clause_id": "S05-C3",
+            "explanation": "Line 3 (Veal escalope) is billed at 3.5 kg, but delivery note DN-0110 records 3 kg. The contract says only the quantities on the signed receipt may be billed.",
+            "line_index": 3,
+            "quote": "The quantities acknowledged on the signed consignment receipt are binding; only those quantities may be billed.",
+            "type": "quantity_mismatch"
+          }
+        ],
+        "product_mapping": []
+      },
+      "name": "submit_review"
+    }
+  ]
+}

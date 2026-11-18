@@ -1,0 +1,60 @@
+{
+  "error": null,
+  "input_tokens": 8185,
+  "invoice_id": "INV-H006",
+  "model": "claude-haiku-5-5",
+  "output_tokens": 846,
+  "pdf_sha256": "ed4ed6c6f8bfd184f0e8919412815bb35de62bf6ba37258a190eb9e411513730",
+  "read": {
+    "credits_invoice_number": null,
+    "delivery_date": "2026-03-18",
+    "delivery_note_id": "DN-0099",
+    "document_type": "invoice",
+    "invoice_date": "2026-04-01",
+    "language": "it",
+    "lines": [
+      {
+        "description": "Detersivo piatti 5 l",
+        "line_total": 1032.0,
+        "product_id": "P410",
+        "qty": 8.0,
+        "unit": "pcs",
+        "unit_price": 129.0,
+        "vat_rate": 0.25
+      },
+      {
+        "description": "Farina tipo 00",
+        "line_total": 413.0,
+        "product_id": "P404",
+        "qty": 29.5,
+        "unit": "kg",
+        "unit_price": 14.0,
+        "vat_rate": 0.12
+      },
+      {
+        "description": "Spaghetti",
+        "line_total": 574.0,
+        "product_id": "P401",
+        "qty": 20.5,
+        "unit": "kg",
+        "unit_price": 28.0,
+        "vat_rate": 0.12
+      },
+      {
+        "description": "Sale marino grosso",
+        "line_total": 114.0,
+        "product_id": "P406",
+        "qty": 6.0,
+        "unit": "kg",
+        "unit_price": 19.0,
+        "vat_rate": 0.12
+      }
+    ],
+    "number": "DL-2026-0263",
+    "supplier_org_number": "000000-0004",
+    "total_excl_vat": 2133.0,
+    "total_incl_vat": 2523.12,
+    "vat_total": 390.12
+  },
+  "seconds": 4.14
+}

@@ -1,0 +1,69 @@
+{
+  "error": null,
+  "input_tokens": 8242,
+  "invoice_id": "INV-H019",
+  "model": "claude-haiku-5-5",
+  "output_tokens": 1208,
+  "pdf_sha256": "a29a85108d3b041fe9011b01adb06862fa762fcc26f5efe326504ec48c885f8c",
+  "read": {
+    "credits_invoice_number": null,
+    "delivery_date": "2026-08-07",
+    "delivery_note_id": "DN-0111",
+    "document_type": "invoice",
+    "invoice_date": "2026-08-11",
+    "language": "it",
+    "lines": [
+      {
+        "description": "Vino rosso Sangiovese 75 cl",
+        "line_total": 356.0,
+        "product_id": "P601",
+        "qty": 4.0,
+        "unit": "bottle",
+        "unit_price": 89.0,
+        "vat_rate": 0.25
+      },
+      {
+        "description": "Spumante 75 cl",
+        "line_total": 632.0,
+        "product_id": "P603",
+        "qty": 8.0,
+        "unit": "bottle",
+        "unit_price": 79.0,
+        "vat_rate": 0.25
+      },
+      {
+        "description": "Grappa 70 cl",
+        "line_total": 1156.0,
+        "product_id": "P607",
+        "qty": 4.0,
+        "unit": "bottle",
+        "unit_price": 289.0,
+        "vat_rate": 0.25
+      },
+      {
+        "description": "Vino rosato 75 cl",
+        "line_total": 1066.0,
+        "product_id": "P612",
+        "qty": 13.0,
+        "unit": "bottle",
+        "unit_price": 82.0,
+        "vat_rate": 0.25
+      },
+      {
+        "description": "Gin 70 cl",
+        "line_total": 2790.0,
+        "product_id": "P609",
+        "qty": 10.0,
+        "unit": "bottle",
+        "unit_price": 279.0,
+        "vat_rate": 0.25
+      }
+    ],
+    "number": "CS-2026-0339",
+    "supplier_org_number": "000000-0006",
+    "total_excl_vat": 6000.0,
+    "total_incl_vat": 7500.0,
+    "vat_total": 1500.0
+  },
+  "seconds": 5.52
+}

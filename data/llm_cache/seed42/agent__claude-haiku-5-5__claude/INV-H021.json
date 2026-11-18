@@ -1,0 +1,50 @@
+{
+  "cost_usd": 0.0010265,
+  "input_sha256": "d0067c42dda64cb4545b5d4c33b3370becaf8b687b336c0c7f7291957ffdfbc2",
+  "input_tokens": 7345,
+  "output_tokens": 584,
+  "seconds": 5.75,
+  "steps": 3,
+  "stopped_reason": "submitted",
+  "submitted": {
+    "findings": [
+      {
+        "clause_id": "S03-C3",
+        "explanation": "Line 0 (Creme fraiche 34%) is billed at 10.5 l, but delivery note DN-0112 records 8.5 l. The contract limits charges to the receipted amounts, so the billed quantity appears to exceed what was received.",
+        "line_index": 0,
+        "quote": "the receipted amounts are the only amounts that may be charged",
+        "type": "quantity_mismatch"
+      }
+    ],
+    "product_mapping": []
+  },
+  "tool_calls": [
+    {
+      "input": {
+        "product_mapping": []
+      },
+      "name": "run_checks"
+    },
+    {
+      "input": {
+        "query": "invoiced quantity must match delivered quantity on delivery note"
+      },
+      "name": "search_contract"
+    },
+    {
+      "input": {
+        "findings": [
+          {
+            "clause_id": "S03-C3",
+            "explanation": "Line 0 (Creme fraiche 34%) is billed at 10.5 l, but delivery note DN-0112 records 8.5 l. The contract limits charges to the receipted amounts, so the billed quantity appears to exceed what was received.",
+            "line_index": 0,
+            "quote": "the receipted amounts are the only amounts that may be charged",
+            "type": "quantity_mismatch"
+          }
+        ],
+        "product_mapping": []
+      },
+      "name": "submit_review"
+    }
+  ]
+}

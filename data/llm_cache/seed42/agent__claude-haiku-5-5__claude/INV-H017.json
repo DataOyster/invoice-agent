@@ -1,0 +1,50 @@
+{
+  "cost_usd": 0.0009608,
+  "input_sha256": "0c7b7e2ef7b450c42019ec2b3019990c6ea78954edba8e2aa55e8f6e74c1dde4",
+  "input_tokens": 6968,
+  "output_tokens": 528,
+  "seconds": 5.48,
+  "steps": 3,
+  "stopped_reason": "submitted",
+  "submitted": {
+    "findings": [
+      {
+        "clause_id": "S05-C4",
+        "explanation": "The invoiced unit price of 610.95 matches a case price (5 kg x 122.19/kg) rather than a per-kg price, while the line is billed per kg with 12 kg quantity. The contract states items priced per kilogram are charged by net weight, not by case.",
+        "line_index": 0,
+        "quote": "Cases and boxes are packaging only and never a unit of charge for such items.",
+        "type": "unit_confusion"
+      }
+    ],
+    "product_mapping": []
+  },
+  "tool_calls": [
+    {
+      "input": {
+        "product_mapping": []
+      },
+      "name": "run_checks"
+    },
+    {
+      "input": {
+        "query": "chicken breast price per kg unit of sale"
+      },
+      "name": "search_contract"
+    },
+    {
+      "input": {
+        "findings": [
+          {
+            "clause_id": "S05-C4",
+            "explanation": "The invoiced unit price of 610.95 matches a case price (5 kg x 122.19/kg) rather than a per-kg price, while the line is billed per kg with 12 kg quantity. The contract states items priced per kilogram are charged by net weight, not by case.",
+            "line_index": 0,
+            "quote": "Cases and boxes are packaging only and never a unit of charge for such items.",
+            "type": "unit_confusion"
+          }
+        ],
+        "product_mapping": []
+      },
+      "name": "submit_review"
+    }
+  ]
+}

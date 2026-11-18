@@ -1,0 +1,51 @@
+{
+  "error": null,
+  "input_tokens": 8189,
+  "invoice_id": "INV-H022",
+  "model": "claude-haiku-5-5",
+  "output_tokens": 886,
+  "pdf_sha256": "50ec5c115de17046746ac3b26c13c4ec6acafd464f6196f57a16d2c30a70f8c4",
+  "read": {
+    "credits_invoice_number": null,
+    "delivery_date": "2026-09-04",
+    "delivery_note_id": "DN-0113",
+    "document_type": "invoice",
+    "invoice_date": "2026-09-04",
+    "language": "it",
+    "lines": [
+      {
+        "description": "Vino bianco Vermnetino 75 cl",
+        "line_total": 510.0,
+        "product_id": "P602",
+        "qty": 6.0,
+        "unit": "bottle",
+        "unit_price": 85.0,
+        "vat_rate": 0.25
+      },
+      {
+        "description": "Liuqore al limone 70 cl",
+        "line_total": 4380.0,
+        "product_id": "P608",
+        "qty": 20.0,
+        "unit": "bottle",
+        "unit_price": 219.0,
+        "vat_rate": 0.25
+      },
+      {
+        "description": "Vino roasto 75 cl",
+        "line_total": 902.0,
+        "product_id": "P612",
+        "qty": 11.0,
+        "unit": "bottle",
+        "unit_price": 82.0,
+        "vat_rate": 0.25
+      }
+    ],
+    "number": "CS-2026-0340",
+    "supplier_org_number": "000000-0006",
+    "total_excl_vat": 5792.0,
+    "total_incl_vat": 7240.0,
+    "vat_total": 1448.0
+  },
+  "seconds": 9.78
+}

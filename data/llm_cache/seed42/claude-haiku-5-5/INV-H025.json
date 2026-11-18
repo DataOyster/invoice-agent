@@ -1,0 +1,51 @@
+{
+  "error": null,
+  "input_tokens": 8147,
+  "invoice_id": "INV-H025",
+  "model": "claude-haiku-5-5",
+  "output_tokens": 737,
+  "pdf_sha256": "171a8eef35c7160879c9ada1b317502cc38e85c5d400c6565fd5e7f1d0275728",
+  "read": {
+    "credits_invoice_number": null,
+    "delivery_date": "2026-09-24",
+    "delivery_note_id": "DN-0116",
+    "document_type": "invoice",
+    "invoice_date": "2026-10-04",
+    "language": "en",
+    "lines": [
+      {
+        "description": "Italian-style sausages",
+        "line_total": 4366.59,
+        "product_id": "P510",
+        "qty": 29.5,
+        "unit": "kg",
+        "unit_price": 148.02,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Duck breast",
+        "line_total": 8177.7,
+        "product_id": "P509",
+        "qty": 29.5,
+        "unit": "kg",
+        "unit_price": 277.21,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Veal escalope",
+        "line_total": 7145.48,
+        "product_id": "P506",
+        "qty": 20.5,
+        "unit": "kg",
+        "unit_price": 348.56,
+        "vat_rate": 0.06
+      }
+    ],
+    "number": "EB-2026-0310",
+    "supplier_org_number": "000000-0005",
+    "total_excl_vat": 19689.77,
+    "total_incl_vat": 20871.16,
+    "vat_total": 1181.39
+  },
+  "seconds": 6.06
+}

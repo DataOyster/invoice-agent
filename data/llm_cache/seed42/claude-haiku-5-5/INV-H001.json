@@ -1,0 +1,78 @@
+{
+  "error": null,
+  "input_tokens": 8243,
+  "invoice_id": "INV-H001",
+  "model": "claude-haiku-5-5",
+  "output_tokens": 1517,
+  "pdf_sha256": "a939f413142aa944b8e15197d919f255685f2c8bd05f49e32e0a8a13e3a1922f",
+  "read": {
+    "credits_invoice_number": null,
+    "delivery_date": "2026-01-23",
+    "delivery_note_id": "DN-0094",
+    "document_type": "invoice",
+    "invoice_date": "2026-01-24",
+    "language": "sv",
+    "lines": [
+      {
+        "description": "Romansallad",
+        "line_total": 217.5,
+        "product_id": "P206",
+        "qty": 15.0,
+        "unit": "pcs",
+        "unit_price": 14.5,
+        "vat_rate": 0.12
+      },
+      {
+        "description": "Vitlök",
+        "line_total": 724.5,
+        "product_id": "P208",
+        "qty": 10.5,
+        "unit": "kg",
+        "unit_price": 69.0,
+        "vat_rate": 0.12
+      },
+      {
+        "description": "Tomater",
+        "line_total": 480.0,
+        "product_id": "P201",
+        "qty": 15.0,
+        "unit": "kg",
+        "unit_price": 32.0,
+        "vat_rate": 0.12
+      },
+      {
+        "description": "Gul lök",
+        "line_total": 187.0,
+        "product_id": "P203",
+        "qty": 17.0,
+        "unit": "kg",
+        "unit_price": 11.0,
+        "vat_rate": 0.12
+      },
+      {
+        "description": "Zucchini",
+        "line_total": 510.0,
+        "product_id": "P209",
+        "qty": 15.0,
+        "unit": "kg",
+        "unit_price": 34.0,
+        "vat_rate": 0.12
+      },
+      {
+        "description": "Citroner",
+        "line_total": 580.0,
+        "product_id": "P204",
+        "qty": 20.0,
+        "unit": "kg",
+        "unit_price": 29.0,
+        "vat_rate": 0.12
+      }
+    ],
+    "number": "GH-2026-0189",
+    "supplier_org_number": "000000-0002",
+    "total_excl_vat": 2699.0,
+    "total_incl_vat": 3022.88,
+    "vat_total": 323.88
+  },
+  "seconds": 9.06
+}

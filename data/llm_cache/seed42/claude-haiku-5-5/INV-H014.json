@@ -1,0 +1,78 @@
+{
+  "error": null,
+  "input_tokens": 8247,
+  "invoice_id": "INV-H014",
+  "model": "claude-haiku-5-5",
+  "output_tokens": 1626,
+  "pdf_sha256": "7ba884bb3f55679103a4fbb47bda8ca936ddc5585693b733d71d7e441957e236",
+  "read": {
+    "credits_invoice_number": null,
+    "delivery_date": "2026-06-10",
+    "delivery_note_id": "DN-0107",
+    "document_type": "invoice",
+    "invoice_date": "2026-06-14",
+    "language": "sv",
+    "lines": [
+      {
+        "description": "Romansallad",
+        "line_total": 333.5,
+        "product_id": "P206",
+        "qty": 23.0,
+        "unit": "pcs",
+        "unit_price": 14.5,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Äpplen",
+        "line_total": 4212.0,
+        "product_id": "P212",
+        "qty": 13.5,
+        "unit": "kg",
+        "unit_price": 312.0,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Persilja knippe",
+        "line_total": 24.0,
+        "product_id": "P211",
+        "qty": 2.0,
+        "unit": "pcs",
+        "unit_price": 12.0,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Zucchini",
+        "line_total": 850.0,
+        "product_id": "P209",
+        "qty": 25.0,
+        "unit": "kg",
+        "unit_price": 34.0,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Potatis",
+        "line_total": 190.0,
+        "product_id": "P202",
+        "qty": 20.0,
+        "unit": "kg",
+        "unit_price": 9.5,
+        "vat_rate": 0.06
+      },
+      {
+        "description": "Morötter",
+        "line_total": 100.0,
+        "product_id": "P207",
+        "qty": 8.0,
+        "unit": "kg",
+        "unit_price": 12.5,
+        "vat_rate": 0.06
+      }
+    ],
+    "number": "GH-2026-0191",
+    "supplier_org_number": "000000-0002",
+    "total_excl_vat": 5709.5,
+    "total_incl_vat": 6052.07,
+    "vat_total": 342.57
+  },
+  "seconds": 6.77
+}
