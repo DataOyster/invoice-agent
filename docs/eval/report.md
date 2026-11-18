@@ -115,20 +115,107 @@ Key-field accuracy: **36.7%** (threshold 95.0%: **FAIL**)
 - Missed: INV-H004 price_above_agreement, INV-H007 wrong_vat, INV-H010 wrong_vat, INV-H014 unit_confusion, INV-H015 price_above_agreement, INV-H016 duplicate, INV-H017 unit_confusion, INV-H018 quantity_mismatch, INV-H021 quantity_mismatch, INV-H026 duplicate
 - False flags: none
 
-Claude extraction on the hard split: not run yet (`python -m invoice_agent.evals.llm_runs --split hard`).
+### Extraction: hard, Claude
 
-Agent on hard rules reads: not run yet (`python -m invoice_agent.evals.agent_runs --split hard --input rules`).
+Key-field accuracy: **100.0%** (threshold 95.0%: pass)
 
-Agent on hard claude reads: not run yet (`python -m invoice_agent.evals.agent_runs --split hard --input claude`).
+| Field | Correct | Total | Accuracy |
+|---|---|---|---|
+| number | 30 | 30 | 100.0% |
+| invoice_date | 30 | 30 | 100.0% |
+| total_incl_vat | 30 | 30 | 100.0% |
+| unit_price | 125 | 125 | 100.0% |
+
+- Readable documents sent to manual review: 0 of 30
+- Unreadable PDFs sent to manual review: 0 of 0
+- Confident but wrong (passed the self-check with a wrong key field): 0
+- Lines mapped to the right catalog product: 125 of 125 (100.0%)
+
+### Anomaly detection: hard, checks on Claude reads
+
+| Type | TP | FP | FN | Precision | Recall | Recall threshold |
+|---|---|---|---|---|---|---|
+| price_above_agreement | 2 | 0 | 0 | 100.0% | 100.0% | 90.0%: pass |
+| duplicate | 2 | 0 | 0 | 100.0% | 100.0% | 90.0%: pass |
+| wrong_vat | 2 | 0 | 0 | 100.0% | 100.0% | 90.0%: pass |
+| quantity_mismatch | 2 | 0 | 0 | 100.0% | 100.0% | 80.0%: pass |
+| unit_confusion | 2 | 0 | 0 | 100.0% | 100.0% | 80.0%: pass |
+| **all** | 10 | 0 | 0 | 100.0% | 100.0% | precision 85.0%: pass |
+
+- Trap cases wrongly flagged: 0
+- Missed: none
+- False flags: none
+
+Claude usage on the hard split:
+
+- model: claude-haiku-5-5
+- mean input tokens: 8177
+- mean output tokens: 943
+- mean seconds: 5.3
+- failed calls: 0
+
+### Anomaly detection: hard, agent on rules reads
+
+| Type | TP | FP | FN | Precision | Recall | Recall threshold |
+|---|---|---|---|---|---|---|
+| price_above_agreement | 1 | 0 | 1 | 100.0% | 50.0% | 90.0%: **FAIL** |
+| duplicate | 0 | 0 | 2 | n/a | 0.0% | 90.0%: **FAIL** |
+| wrong_vat | 2 | 0 | 0 | 100.0% | 100.0% | 90.0%: pass |
+| quantity_mismatch | 0 | 0 | 2 | n/a | 0.0% | 80.0%: **FAIL** |
+| unit_confusion | 1 | 0 | 1 | 100.0% | 50.0% | 80.0%: **FAIL** |
+| **all** | 4 | 0 | 6 | 100.0% | 40.0% | precision 85.0%: pass |
+
+- Trap cases wrongly flagged: 0
+- Missed: INV-H014 unit_confusion, INV-H015 price_above_agreement, INV-H016 duplicate, INV-H018 quantity_mismatch, INV-H021 quantity_mismatch, INV-H026 duplicate
+- False flags: none
+
+### Agent behaviour: hard, agent on rules reads
+
+- Invoices: 30; agent called on 9 (the others needed no model)
+- Stopped: submitted 9
+- Mean per call: 3.2 steps, 9300 input and 499 output tokens, $0.0012, 14.4 s
+- Lines matched to the catalog by the agent: 33
+- Agent quotes verified / rejected: 2 / 0; flags with a verified clause quote: 2 of 2
+- Agent findings ignored (not produced by the checks): 0
+- Sent to manual review: 21
+
+### Anomaly detection: hard, agent on claude reads
+
+| Type | TP | FP | FN | Precision | Recall | Recall threshold |
+|---|---|---|---|---|---|---|
+| price_above_agreement | 2 | 0 | 0 | 100.0% | 100.0% | 90.0%: pass |
+| duplicate | 2 | 0 | 0 | 100.0% | 100.0% | 90.0%: pass |
+| wrong_vat | 2 | 0 | 0 | 100.0% | 100.0% | 90.0%: pass |
+| quantity_mismatch | 2 | 0 | 0 | 100.0% | 100.0% | 80.0%: pass |
+| unit_confusion | 2 | 0 | 0 | 100.0% | 100.0% | 80.0%: pass |
+| **all** | 10 | 0 | 0 | 100.0% | 100.0% | precision 85.0%: pass |
+
+- Trap cases wrongly flagged: 0
+- Missed: none
+- False flags: none
+
+### Agent behaviour: hard, agent on claude reads
+
+- Invoices: 30; agent called on 10 (the others needed no model)
+- Stopped: submitted 10
+- Mean per call: 2.8 steps, 6726 input and 498 output tokens, $0.0009, 6.8 s
+- Lines matched to the catalog by the agent: 0
+- Agent quotes verified / rejected: 8 / 0; flags with a verified clause quote: 8 of 8
+- Agent findings ignored (not produced by the checks): 0
+- Sent to manual review: 0
 
 ### Hard split by difficulty
 
 | Difficulty | Extractor | Documents | Key-field accuracy | Sent to review | Product mapping |
 |---|---|---|---|---|---|
 | unseen_layout | rules | 11 | 0.0% | 11 | 0.0% |
+| unseen_layout | Claude | 11 | 100.0% | 0 | 100.0% |
 | description_variants | rules | 11 | 82.2% | 2 | 0.0% |
+| description_variants | Claude | 11 | 100.0% | 0 | 100.0% |
 | heavy_noise | rules | 8 | 31.1% | 8 | 0.0% |
+| heavy_noise | Claude | 8 | 100.0% | 0 | 100.0% |
 | image_only_readable | rules | 2 | 0.0% | 2 | 0.0% |
+| image_only_readable | Claude | 2 | 100.0% | 0 | 100.0% |
 
 ## Clause retrieval (BM25)
 
@@ -160,7 +247,9 @@ Agent on hard claude reads: not run yet (`python -m invoice_agent.evals.agent_ru
 
 ## Not measured yet
 
-- Cost and time per invoice: shown in the agent sections once live runs are cached.
+- Real supplier invoices: every number above is on synthetic data.
+- The real model on adversarial documents (hidden instructions, conflicting clauses): task 10.
+- Claude on the standard split: not needed to compare with the rules, which already score 100% there.
 
 ## Notes
 
@@ -169,3 +258,7 @@ Agent on hard claude reads: not run yet (`python -m invoice_agent.evals.agent_ru
 - Hard split: an unseen layout, product names printed differently from the catalog, strong rotation and scans without a text layer. The rules were not changed to fit it.
 - At most one injected anomaly per invoice; real invoices can carry several at once.
 - Contracts are in English only; invoices are in Swedish, English and Italian.
+- Small sample: the hard split has 30 documents and 10 anomalies. 10 of 10 found is consistent with a true recall as low as about 69% (two-sided 95% Clopper-Pearson interval). Read 100% as 'no failure seen on this bench', not as 'solved'.
+- The hard split is hard for text rules, not for a model that reads the page image: Claude reaches the ceiling on it, so it can no longer rank models. Separating models would need harder documents (real phone photos, handwriting, multi-page invoices).
+- Claude extraction receives the buyer's product catalogue in the prompt, which is why it maps printed names to catalogue products; a real deployment has that catalogue too.
+- On Claude reads the agent maps no products (extraction already did); its measured contribution there is the explanation and a clause quote verified verbatim. On rules reads it also maps oddly printed products, which is where its recall gain comes from.

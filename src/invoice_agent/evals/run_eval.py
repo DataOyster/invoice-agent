@@ -59,6 +59,25 @@ NOTES = [
     ),
     "At most one injected anomaly per invoice; real invoices can carry several at once.",
     "Contracts are in English only; invoices are in Swedish, English and Italian.",
+    (
+        "Small sample: the hard split has 30 documents and 10 anomalies. 10 of 10 found is "
+        "consistent with a true recall as low as about 69% (two-sided 95% Clopper-Pearson "
+        "interval). Read 100% as 'no failure seen on this bench', not as 'solved'."
+    ),
+    (
+        "The hard split is hard for text rules, not for a model that reads the page image: "
+        "Claude reaches the ceiling on it, so it can no longer rank models. Separating models "
+        "would need harder documents (real phone photos, handwriting, multi-page invoices)."
+    ),
+    (
+        "Claude extraction receives the buyer's product catalogue in the prompt, which is why "
+        "it maps printed names to catalogue products; a real deployment has that catalogue too."
+    ),
+    (
+        "On Claude reads the agent maps no products (extraction already did); its measured "
+        "contribution there is the explanation and a clause quote verified verbatim. On rules "
+        "reads it also maps oddly printed products, which is where its recall gain comes from."
+    ),
 ]
 
 

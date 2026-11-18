@@ -220,7 +220,15 @@ def render_report(
     out += [
         "## Not measured yet",
         "",
-        "- Cost and time per invoice: shown in the agent sections once live runs are cached.",
+        "- Real supplier invoices: every number above is on synthetic data.",
+        (
+            "- The real model on adversarial documents (hidden instructions, conflicting clauses): "
+            "task 10."
+        ),
+        (
+            "- Claude on the standard split: not needed to compare with the rules, which already "
+            "score 100% there."
+        ),
         "",
         "## Notes",
         "",
