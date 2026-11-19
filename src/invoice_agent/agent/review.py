@@ -42,6 +42,30 @@ class InvoiceReview:
 AgentRunner = Callable[[ToolBox], AgentRun]
 
 
+def unchecked_reasons(inv: ExtractedInvoice, repo: Repository) -> list[str]:
+    """Checks that could not run because the reference data has no answer for that date.
+
+    A missing VAT rule or agreed price must not pass silently as "no anomaly": the invoice goes
+    to a person, who can see that the table needs updating (found by the adversarial tests).
+    """
+    reasons = []
+    for i, line in enumerate(inv.lines):
+        product = repo.product(line.product_id)
+        if product is None or inv.delivery_date is None:
+            continue
+        if repo.vat_rule(product.vat_category, inv.delivery_date) is None:
+            reasons.append(
+                f"line {i}: no VAT rule for {product.vat_category} on {inv.delivery_date}: "
+                "VAT not checked"
+            )
+        if repo.agreed_price(product.product_id, inv.delivery_date) is None:
+            reasons.append(
+                f"line {i}: no agreed price for {product.product_id} on {inv.delivery_date}: "
+                "price not checked"
+            )
+    return reasons
+
+
 def review_invoice(
     inv: ExtractedInvoice,
     repo: Repository,
@@ -64,6 +88,9 @@ def review_invoice(
     unmapped = [i for i, x in enumerate(inv.lines) if x.product_id is None]
     first_pass = RuleBaseline(repo).check(inv)
     if not unmapped and not first_pass:
+        review.reasons += unchecked_reasons(inv, repo)
+        if review.reasons:
+            review.status = "manual_review"
         return review  # nothing to explain or match: no model call, no cost
 
     run = run_agent(toolbox)
@@ -91,6 +118,7 @@ def review_invoice(
     still_unmapped = [i for i, x in enumerate(mapped.lines) if x.product_id is None]
     if still_unmapped:
         review.reasons.append(f"lines {still_unmapped} not matched to the catalog: not checked")
+    review.reasons += unchecked_reasons(mapped, repo)
     if run.stopped_reason != "submitted":
         review.reasons.append(f"agent stopped: {run.stopped_reason}")
     if review.reasons:
@@ -111,17 +139,22 @@ def _annotate(
 ) -> Flag:
     explanation = None
     citation = None
+    topic = catalog.CLAUSE_FOR_ANOMALY.get(flag.type)  # None for wrong_vat: the VAT table rules
     if note:
         explanation = (note.get("explanation") or "")[:MAX_EXPLANATION_CHARS] or None
         if note.get("clause_id") and note.get("quote"):
             candidate = Citation(note["clause_id"], "", note["quote"])
             clause = repo.clause(candidate.clause_id)
-            if clause and clause.supplier_id == supplier_id and verify_citation(candidate, repo):
+            if (
+                clause
+                and clause.supplier_id == supplier_id
+                and clause.topic == topic  # verbatim is not enough: it must be on this topic
+                and verify_citation(candidate, repo)
+            ):
                 citation = candidate
                 review.citations_verified += 1
             else:
                 review.citations_rejected += 1
-    topic = catalog.CLAUSE_FOR_ANOMALY.get(flag.type)
     if citation is None and topic is not None:  # fall back to retrieval, quoted verbatim
         product = (
             repo.product(inv.lines[flag.line_index].product_id)
