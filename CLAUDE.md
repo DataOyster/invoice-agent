@@ -58,6 +58,7 @@ python -m invoice_agent.db.seed             # build data/invoice_agent.db from t
 python -m invoice_agent.evals.run_eval      # report for both splits -> docs/eval/report.md (offline)
 python -m invoice_agent.demo_db             # demo DB for MCP and UI, replayed from the cache (offline)
 python -m invoice_agent.mcp_server          # read-only MCP server (Claude Desktop starts it; see docs/MCP.md)
+streamlit run src/invoice_agent/ui/app.py   # review queue: a named person confirms or dismisses flags
 pytest                      # offline, uses the fake LLM
 pytest -m live              # real API, manual only (includes live adversarial runs)
 ruff check . && ruff format --check .

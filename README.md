@@ -141,8 +141,15 @@ python -m invoice_agent.evals.llm_runs --split hard              # Claude extrac
 python -m invoice_agent.evals.agent_runs --split hard --input claude
 ```
 
-To try the MCP server, run `python -m invoice_agent.demo_db --model claude-haiku-5-5` (offline),
-then follow [docs/MCP.md](docs/MCP.md).
+Build the demo database once (offline) with `python -m invoice_agent.demo_db --model claude-haiku-5-5`.
+It holds the 30 hard-split invoices and their 15 pending flags. Then:
+
+- **Review queue:** `streamlit run src/invoice_agent/ui/app.py`. Each flag is shown with the
+  invoice line, its evidence and the contract quote side by side. A named reviewer confirms or
+  dismisses it. The decision is final and audited, and it is the only place a flag is decided.
+- **MCP:** follow [docs/MCP.md](docs/MCP.md) to query the same data from Claude Desktop.
+
+Decisions are final, so delete `data/invoice_agent.db` and rebuild it to reset the demo.
 
 ## Project layout
 
@@ -155,6 +162,7 @@ src/invoice_agent/
   agent/        tools, tool-use loop with limits, review
   guardrails/   masking, injection tripwire, flag validation
   mcp_server/   read-only MCP tools for Claude Desktop
+  ui/           Streamlit review queue (the only place a flag is decided)
   evals/        metrics, rule baseline, cached live runs, guardrail suite, report
   pipeline.py   one invoice end to end
 tests/          unit, evals, adversarial, live (manual)
@@ -174,14 +182,11 @@ tests/          unit, evals, adversarial, live (manual)
 
 ## Not built (yet)
 
-- **Review UI:** cut for time. Flags wait in the `flags` table as `pending_review`, and the
-  decision function needs a named reviewer.
 - **Real invoices:** no real scans or handwriting, and no multi-page or multi-anomaly
   invoices.
 - **Integrations:** no e-invoicing (Peppol) or ERP integration.
 
-The next steps would be a harder test set built from real documents, the review UI, and
-shadow-mode use next to an accountant to measure precision on real data.
+The next steps would be a harder test set built from real documents, and shadow-mode use next to an accountant to measure precision on real data.
 
 ---
 
