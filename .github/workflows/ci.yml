@@ -1,0 +1,33 @@
+# Offline test suite on every push and pull request. No secrets, no network calls to the model:
+# tests use a scripted model, and live tests (pytest -m live) are excluded by pyproject.toml.
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install (exact versions, so generated PDFs match the committed cache)
+        run: pip install -e ".[dev]" -c constraints.txt
+
+      - name: Lint
+        run: |
+          ruff check .
+          ruff format --check .
+
+      - name: Tests (offline; includes the guardrail suite and adversarial tests)
+        run: pytest -rxXs

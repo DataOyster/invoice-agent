@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 from invoice_agent.demo_db import build_demo_db
+from invoice_agent.evals.agent_runs import reads_for
 from invoice_agent.evals.reference import load_reference
 
 CACHE = Path("data/llm_cache")
@@ -24,13 +25,14 @@ def _cached_model() -> str | None:
 def test_demo_database_holds_exactly_the_injected_anomalies_as_pending_flags(
     generated_dir, tmp_path
 ):
+    ref = load_reference(generated_dir)
+    if reads_for(ref, generated_dir, "hard", "claude", CACHE, _cached_model()) is None:
+        # The cache is keyed by PDF hash: other library versions can render other bytes.
+        pytest.skip("cache does not match the PDFs rendered here (different library versions?)")
     repo = build_demo_db(generated_dir, tmp_path / "demo.db", CACHE, _cached_model())
     flags = repo.flags()
     truth = {
-        (g.invoice_id, a.type)
-        for g in load_reference(generated_dir).ground_truth
-        if g.split == "hard"
-        for a in g.anomalies
+        (g.invoice_id, a.type) for g in ref.ground_truth if g.split == "hard" for a in g.anomalies
     }
     assert {(f.flag.invoice_id, f.flag.type) for f in flags} == truth
     assert all(f.status == "pending_review" and f.reviewer is None for f in flags)
