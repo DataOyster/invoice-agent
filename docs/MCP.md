@@ -49,8 +49,10 @@ several entry points.
    ```
    This gives `data/invoice_agent.db`: reference data, the 30 hard-split invoices and 15
    pending flags (the 10 injected anomalies, some on several lines).
-2. In Claude Desktop, open **Settings → Developer → Edit Config**. This opens
-   `claude_desktop_config.json`. Add the server, with absolute paths to your clone (on
+2. In Claude Desktop, open **Settings → Desktop app → Extensions → Local MCP servers → Edit config**
+   (older versions: **Settings → Developer → Edit Config**). This opens
+   `claude_desktop_config.json`. If the file already has other keys, add `mcpServers` next to
+   them; do not replace them. Add the server, with absolute paths to your clone (on
    macOS or Linux the interpreter is `.venv/bin/python`):
    ```json
    {
@@ -63,8 +65,10 @@ several entry points.
      }
    }
    ```
-3. Quit Claude Desktop completely and start it again. The tools appear under the tools icon in a
-   new chat.
+3. **Quit Claude Desktop completely** (tray icon → Quit; closing the window is not enough) and
+   start it again. Edit the file while the app is closed: a running app can rewrite the file and
+   drop the new block. The server then shows under Local MCP servers, and its tools are
+   available in a new chat.
 
 ## Questions to try
 
