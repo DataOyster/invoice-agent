@@ -17,4 +17,4 @@ Severity "never" = CLAUDE.md hard rule, must hold 100%. "Other" = threshold 95%.
 
 **Limit, stated plainly:** these cases run offline with a scripted model. They prove the
 structure around the model holds whatever the model does; they do not measure how the real model
-behaves on adversarial documents. That is task 10 (live adversarial runs).
+behaves on adversarial documents. Task 10 adds adversarial tests, offline and live; see `docs/ADVERSARIAL.md`.

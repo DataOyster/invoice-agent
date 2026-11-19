@@ -59,7 +59,7 @@ python -m invoice_agent.evals.run_eval      # report for both splits -> docs/eva
 python -m invoice_agent.demo_db             # demo DB for MCP and UI, replayed from the cache (offline)
 python -m invoice_agent.mcp_server          # read-only MCP server (Claude Desktop starts it; see docs/MCP.md)
 pytest                      # offline, uses the fake LLM
-pytest -m live              # real API, manual only
+pytest -m live              # real API, manual only (includes live adversarial runs)
 ruff check . && ruff format --check .
 ```
 
