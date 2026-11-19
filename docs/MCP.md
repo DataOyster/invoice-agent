@@ -50,14 +50,15 @@ several entry points.
    This gives `data/invoice_agent.db`: reference data, the 30 hard-split invoices and 15
    pending flags (the 10 injected anomalies, some on several lines).
 2. In Claude Desktop, open **Settings → Developer → Edit Config**. This opens
-   `claude_desktop_config.json`. Add the server, using absolute paths:
+   `claude_desktop_config.json`. Add the server, with absolute paths to your clone (on
+   macOS or Linux the interpreter is `.venv/bin/python`):
    ```json
    {
      "mcpServers": {
        "invoice-agent": {
-         "command": "C:\\Users\\maria\\OneDrive\\Desktop\\Fabio\\Invoice-agent\\.venv\\Scripts\\python.exe",
+         "command": "C:\\path\\to\\invoice-agent\\.venv\\Scripts\\python.exe",
          "args": ["-m", "invoice_agent.mcp_server", "--db",
-                  "C:\\Users\\maria\\OneDrive\\Desktop\\Fabio\\Invoice-agent\\data\\invoice_agent.db"]
+                  "C:\\path\\to\\invoice-agent\\data\\invoice_agent.db"]
        }
      }
    }
