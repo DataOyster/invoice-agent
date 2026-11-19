@@ -2,7 +2,7 @@
 
 Prototype of an AI agent that checks supplier invoices for a restaurant against agreed price lists, contracts and delivery notes, and flags anomalies with evidence. A human always decides.
 
-**Why this exists:** Fabio Rubino is applying for the AI Engineer role at Mpya Digital AI (Stockholm), a consultancy building an agentic-AI practice. The job asks for agents in production, tool use, orchestration, MCP, RAG, evaluation and reliability, and "systems that handle real business processes, not demos". This prototype is portfolio evidence for exactly that. Interview with Mpya Digital: **Friday 20 November 2026**. Work plan: Mon 16 to Thu 19 (4 tasks a day, Thursday is docs, rehearsal and margin). All data is **synthetic**.
+**Why this exists:** a portfolio prototype by Fabio Rubino showing an agent on a real business process, not a demo: tool use, orchestration, MCP, RAG, evaluation and reliability. Deadline: **Friday 20 November 2026**. Work plan: Mon 16 to Thu 19 (4 tasks a day, Thursday is docs, rehearsal and margin). All data is **synthetic**.
 
 **Working language:** Fabio writes Italian. Talk to him in Italian. **Everything in the project is in English**: code, comments, docs, README, test names, commit messages (the repo will be shown to a Swedish company).
 
@@ -72,4 +72,4 @@ ruff check . && ruff format --check .
 - Run one real-API check (`pytest -m live`) on Monday so key, model name or rate-limit problems show up early.
 - At the end of each task, write a short progress note: done, measured, slipped.
 - Be honest in reports: numbers on synthetic data are a reproducible test bench, not real-world performance. Say so in the eval report.
-- Explain concepts simply first, then add depth. Fabio is learning MCP/RAG/eval details while building; keep code readable enough to explain line by line in an interview.
+- Explain concepts simply first, then add depth. Fabio is learning MCP/RAG/eval details while building; keep code readable enough to explain line by line in a review.

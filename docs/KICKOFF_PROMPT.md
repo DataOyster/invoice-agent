@@ -6,7 +6,7 @@ Open a terminal in this folder, run `claude`, and paste everything below the lin
 
 Read `CLAUDE.md`, `docs/SPEC.md`, `docs/ROADMAP.md` and `docs/DATASET_PLAN.md` first. They contain the whole context: the project, the hard rules, the metrics and the plan. I am Fabio. **Talk to me in Italian. Write everything in the project in English**: code, comments, docs, README, commit messages, test names.
 
-Goal: build the invoice reconciliation agent described there, as portfolio evidence for the AI Engineer role at Mpya Digital AI. My interview with them is **Friday 20 November 2026**. Today is Monday 16 November. Evaluation and guardrails matter most, then MCP, then RAG. All data is synthetic.
+Goal: build the invoice reconciliation agent described there, as a portfolio project for an AI Engineer role. My deadline is **Friday 20 November 2026**. Today is Monday 16 November. Evaluation and guardrails matter most, then MCP, then RAG. All data is synthetic.
 
 ## Schedule (4 tasks a day, Thursday is margin)
 - Mon 16: tasks 2, 3, 4, 5 (dataset, evaluation skeleton, data layer, extraction)

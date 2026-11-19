@@ -76,6 +76,6 @@ Baseline: fixed rules with no AI (task 3). The agent must beat the baseline on r
 ## 7. Open decisions (Fabio)
 - [ ] Metric thresholds (95 / 90 / 85) as a starting point?
 - [ ] 1% tolerance on price and quantity?
-- [ ] Prefer false alarms over missed anomalies, and defend that choice in the interview?
+- [ ] Prefer false alarms over missed anomalies, and state that choice in the docs?
 - [ ] Invoice languages: Swedish, English and Italian, or Swedish and English only?
 - [ ] Share of invoices with errors: proposed ~25%.

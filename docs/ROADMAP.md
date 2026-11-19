@@ -1,6 +1,6 @@
 # Roadmap (12 tasks + 1 optional), 16-19 November 2026
 
-Interview with Mpya Digital: **Friday 20 November 2026**. Work days: Mon 16, Tue 17, Wed 18, Thu 19 (Thursday = docs, pitch rehearsal and safety margin).
+Deadline: **Friday 20 November 2026**. Work days: Mon 16, Tue 17, Wed 18, Thu 19 (Thursday = docs, pitch rehearsal and safety margin).
 
 Eval and guardrails come first, not last. Mark a task done only when its tests pass.
 Cut order if time runs out: task 11, then task 13. **Never cut tasks 8 and 10.**
